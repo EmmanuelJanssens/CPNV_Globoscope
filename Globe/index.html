@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head>
-    
-    <meta charset="utf-8">
-    <title>Globe</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
+	<head>
+		<title>three.js css3d - periodic table</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-    <div id="canvasDesign">
-        <canvas id="mainCanvas" width="700" height="700">
-            <script src="js/drawGlobe.js" >
+		<style>
+				body { margin: 0; }
+				canvas { width: 100%; height: 100% }
+			</style>
+	</head>
 
-            </script>
-        </canvas>
-    </div>
-</body>
+	<body>
+
+
+			<script src="build/three.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+			<script src="js/point.js"></script>
+			<script src="js/square.js"></script>
+			<script src="js/meridian.js"></script>
+			<script src="js/three/controls/TrackballControls.js"></script>
+			<script src="js/drawGlobe.js"></script>
+				
+	</body>
 </html>
