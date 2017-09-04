@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =100 ;
 var cellH = 100;
 
-var totalMeridians = 12;
+var totalMeridians =1;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -31,17 +31,39 @@ draw();
 
 function draw()
 {
+  var numCollisions = 0;
+  var pointLight = new THREE.DirectionalLight(0xbbbbbb);
+  pointLight.position.set(100, 100, 500);
+  scene.add(pointLight);
 
-    for(var i = 0; i < totalMeridians; i++)
-    {
-        meridians[i].drawMeridianCells(scene);
-    }
+  var ambientLight = new THREE.AmbientLight(0xbbbbbb);
+  scene.add(ambientLight);
+
+  sphereGeometry = new THREE.SphereGeometry(200, 64, 64);
+  sphereMaterial = new THREE.MeshPhongMaterial({
+      color: 'darkgreen',
+      opacity: 0.5,
+      transparent: true
+  });
+
+  sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  scene.add(sphereMesh);
+
+
+  for(var i = 0; i < totalMeridians; i++)
+  {
+      meridians[i].drawMeridianCells(scene,sphereMesh);
+  } 
+
+  var axes = new THREE.AxisHelper(1000);
+  scene.add(axes);
 }
 
 function render()
 {
     renderer.render(scene, camera);     
 }
+
 TweenLite.ticker.addEventListener('tick', render );
 
 function initialize()
@@ -49,7 +71,8 @@ function initialize()
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 100000 );
-
+    camera.lookAt(scene.position);
+    
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
@@ -69,7 +92,6 @@ function initialize()
 }
 
 ////////////////////////////////////////
-
 var controls = new THREE.TrackballControls( camera );
 
 controls.rotateSpeed = 3.6;
@@ -85,10 +107,7 @@ controls.dynamicDampingFactor = 0.12;
 controls.enabled = true;
 
 TweenLite.ticker.addEventListener("tick", controls.update );
-
-
 ////////////////////////////////////////
-
 var timeline = new TimelineLite({
   onStart: function(){
     TweenLite.ticker.removeEventListener("tick", controls.update );
@@ -102,11 +121,7 @@ var timeline = new TimelineLite({
   }
 });
 easing = 'Expo.easeInOut';
-
-
 ////////////////////////////////////////
-
-
 camera.reset = function(){
 
   var pos = { x: 0, y: 0 };
@@ -129,10 +144,7 @@ camera.reset = function(){
   timeline.to( camera.rotation, speed, { x: 0, y: 0, z: 0, ease: easing}, 0);
   
 }; 
-
-
 ////////////////////////////////////////
-
 camera.getDistance = function(object) {
 
   var helper = new THREE.BoundingBoxHelper(object, 0xff0000);
@@ -150,11 +162,7 @@ camera.getDistance = function(object) {
 
   return distance;
 };
-
-
 ////////////////////////////////////////
-
-
 camera.zoom = function(object){
 
   var pos = camera.position.clone();
@@ -172,11 +180,7 @@ camera.zoom = function(object){
   },0);
 
 };
-
-
 ////////////////////////////////////////
-
-
 var startX, startY,
     $target = $(renderer.domElement),
     selected;

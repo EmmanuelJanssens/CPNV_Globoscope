@@ -67,7 +67,7 @@ class Meridian
 
     }
 
-    drawMeridianCells(scene)
+    drawMeridianCells(scene,sphere)
     {
         var startCollPos = 5;
         var currentCounter = 0;
@@ -115,11 +115,11 @@ class Meridian
 
           
             cell[i] = new Square(   new Point(this._posX  + (currentCounter+startCollPos) * (this._celW),
-            this._posY + (currentRow) * (this._celH) ),
+            this._posY + (currentRow) * (this._celH),0 ),
             this._celW,
             this._celH  );
 
-            cell[i].drawSquare(scene,Math.random() *0xffffff);              
+            cell[i].drawSquare(scene,Math.random() *0xffffff,sphere);              
 
             currentCounter++;        
             currentIndex++;   
