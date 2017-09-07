@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =100 ;
 var cellH = 100;
 
-var totalMeridians =1;
+var totalMeridians =5;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -39,7 +39,7 @@ function draw()
   var ambientLight = new THREE.AmbientLight(0xbbbbbb);
   scene.add(ambientLight);
 
-  sphereGeometry = new THREE.SphereGeometry(200, 64, 64);
+  sphereGeometry = new THREE.SphereGeometry(800, 64, 64);
   sphereMaterial = new THREE.MeshPhongMaterial({
       color: 'darkgreen',
       opacity: 0.5,
@@ -47,7 +47,6 @@ function draw()
   });
 
   sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  scene.add(sphereMesh);
 
 
   for(var i = 0; i < totalMeridians; i++)
@@ -64,7 +63,6 @@ function render()
     renderer.render(scene, camera);     
 }
 
-TweenLite.ticker.addEventListener('tick', render );
 
 function initialize()
 {
@@ -91,6 +89,8 @@ function initialize()
 
 }
 
+
+TweenLite.ticker.addEventListener('tick', render );
 ////////////////////////////////////////
 var controls = new THREE.TrackballControls( camera );
 

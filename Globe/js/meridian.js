@@ -85,7 +85,12 @@ class Meridian
         var currentIndex = 0;
 
         var north = true;
-
+        
+        var spherical = new THREE.Spherical();
+        var vector = new THREE.Vector3();
+        var r = 0;
+        var g = 0;
+        var b = 0;
         for(var i = 0; i < this._totalCells; i++)
         {
             if(currentCounter >= col[counter])
@@ -113,19 +118,30 @@ class Meridian
                 }
             }
 
-          
-            cell[i] = new Square(   new Point(this._posX  + (currentCounter+startCollPos) * (this._celW),
-            this._posY + (currentRow) * (this._celH),0 ),
+
+            var _x = 1000* Math.cos(this._posX  +(currentCounter+startCollPos) * (this._celW)) * Math.cos(this._posY + (currentRow) * (this._celH));
+            var _y = 1000* Math.cos(this._posX  +(currentCounter+startCollPos) * (this._celW))  * Math.sin(this._posY + (currentRow) * (this._celH));
+            var _z = 1000* Math.sin(this._posX  +(currentCounter+startCollPos) * (this._celW));
+
+            cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW,
             this._celH  );
 
-            cell[i].drawSquare(scene,Math.random() *0xffffff,sphere);              
-
+            /*
+            cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW)),
+            (this._posY + (currentRow) * (this._celH)),0 ),
+            this._celW,
+            this._celH  );*/
+            
+            cell[i].drawSquare(scene,Math.random() *0xffffff,sphere);     
+            cell[i].lookAtZero();
+            
             currentCounter++;        
             currentIndex++;   
 
         }         
     }
+
     getWidth()
     {
         return this._Width;
