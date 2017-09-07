@@ -13,8 +13,8 @@ class Meridian
 
         this.position = new Point(posX,posY);
 
-        this._posX = this.position.x * scale ;
-        this._posY = this.position.y * scale ;
+        this._posX = this.position.x  ;
+        this._posY = this.position.y  ;
 
 
         
@@ -67,7 +67,7 @@ class Meridian
 
     }
 
-    drawMeridianCells(scene,sphere)
+    drawMeridianCells(scene,rayon)
     {
         var startCollPos = 5;
         var currentCounter = 0;
@@ -118,13 +118,15 @@ class Meridian
                 }
             }
 
+            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW))/rayon;
+            var lat = 2 * Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH))/rayon )) - Math.PI/2;
 
-            var _x = 1000* Math.cos(this._posX  +(currentCounter+startCollPos) * (this._celW)) * Math.cos(this._posY + (currentRow) * (this._celH));
-            var _y = 1000* Math.cos(this._posX  +(currentCounter+startCollPos) * (this._celW))  * Math.sin(this._posY + (currentRow) * (this._celH));
-            var _z = 1000* Math.sin(this._posX  +(currentCounter+startCollPos) * (this._celW));
+            var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
+            var _y = rayon* (Math.cos(lat)  * Math.sin(long));
+            var _z = rayon* (Math.sin(lat));
 
             cell[i] = new Square(new Point(_x,_y,_z ),
-            this._celW,
+            this._celW ,
             this._celH  );
 
             /*
@@ -133,7 +135,7 @@ class Meridian
             this._celW,
             this._celH  );*/
             
-            cell[i].drawSquare(scene,Math.random() *0xffffff,sphere);     
+            cell[i].drawSquare(scene,Math.random() *0xffffff);     
             cell[i].lookAtZero();
             
             currentCounter++;        

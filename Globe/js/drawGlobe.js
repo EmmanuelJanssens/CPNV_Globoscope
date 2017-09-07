@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =100 ;
 var cellH = 100;
 
-var totalMeridians =5;
+var totalMeridians =12;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -23,7 +23,7 @@ var totalH = meridianH * cellH;
 //dimensions d'une cellule
 var textSpacing = 1;
 
-var scale = .2;
+var scale = 1;
 
 
 initialize();
@@ -39,22 +39,16 @@ function draw()
   var ambientLight = new THREE.AmbientLight(0xbbbbbb);
   scene.add(ambientLight);
 
-  sphereGeometry = new THREE.SphereGeometry(800, 64, 64);
-  sphereMaterial = new THREE.MeshPhongMaterial({
-      color: 'darkgreen',
-      opacity: 0.5,
-      transparent: true
-  });
 
-  sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
 
 
   for(var i = 0; i < totalMeridians; i++)
   {
-      meridians[i].drawMeridianCells(scene,sphereMesh);
+      meridians[i].drawMeridianCells(scene,2000);
   } 
 
-  var axes = new THREE.AxisHelper(1000);
+  var axes = new THREE.AxisHelper(5000);
   scene.add(axes);
 }
 
@@ -77,7 +71,7 @@ function initialize()
 
 
 
-    camera.position.z = 1000;
+    camera.position.z = 5000;
     meridians = new Array(totalMeridians);
 
     for(var i = 0; i <totalMeridians; i++)
@@ -99,7 +93,7 @@ controls.zoomSpeed = 0.8;
 controls.panSpeed = 1;
 
 controls.noZoom = false;
-controls.noPan = false;
+controls.noPan = true;
 
 controls.staticMoving = false;
 controls.dynamicDampingFactor = 0.12;
@@ -125,7 +119,7 @@ easing = 'Expo.easeInOut';
 camera.reset = function(){
 
   var pos = { x: 0, y: 0 };
-  var distance = 60;
+  var distance = 1000;
   var speed = 1;
   
   if ( camera.parent !== scene ) {

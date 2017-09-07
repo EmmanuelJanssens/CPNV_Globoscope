@@ -16,7 +16,7 @@ class Square
         this.planeMesh;
         this.vector = new THREE.Vector3();
     }   
-    drawSquare(scene,color,sphere)
+    drawSquare(scene,color)
     {
 
         var planeGeometry,planeMaterial,numCollisions;
@@ -29,6 +29,7 @@ class Square
         });
 
         this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+        this.planeMesh.material.side = THREE.DoubleSide;
         this.planeMesh.position.set(this.x,this.y,this.z);
         
 
