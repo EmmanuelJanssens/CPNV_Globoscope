@@ -118,15 +118,15 @@ class Meridian
                 }
             }
 
-            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW))/rayon;
-            var lat = 2 * Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH))/rayon )) - Math.PI/2;
+            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW+2))/rayon;
+            var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*2))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
             var _y = rayon* (Math.cos(lat)  * Math.sin(long));
             var _z = rayon* (Math.sin(lat));
 
             cell[i] = new Square(new Point(_x,_y,_z ),
-            this._celW ,
+            this._celW  ,
             this._celH  );
 
             /*
