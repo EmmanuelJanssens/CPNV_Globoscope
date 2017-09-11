@@ -67,7 +67,7 @@ class Meridian
 
     }
 
-    drawMeridianCells(scene,rayon)
+    drawMeridianCells(scene,rayon,spacing)
     {
         var startCollPos = 5;
         var currentCounter = 0;
@@ -75,7 +75,6 @@ class Meridian
 
         var counter = 0;
 
-        var row = 0;
 
         let cell = new Array(this._totalCells);
         var rows = [4,3,4,4,6,6,6,6,4,4,3,4];
@@ -86,11 +85,7 @@ class Meridian
 
         var north = true;
         
-        var spherical = new THREE.Spherical();
-        var vector = new THREE.Vector3();
-        var r = 0;
-        var g = 0;
-        var b = 0;
+
         for(var i = 0; i < this._totalCells; i++)
         {
             if(currentCounter >= col[counter])
@@ -118,26 +113,29 @@ class Meridian
                 }
             }
 
-            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW+2))/rayon;
-            var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*2))/rayon )) - Math.PI/2;
+            //spherical W/ mercator projection
+            //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
+
+            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*spacing))/rayon;
+            var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*spacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
-            var _y = rayon* (Math.cos(lat)  * Math.sin(long));
-            var _z = rayon* (Math.sin(lat));
+            var _y =  rayon* (Math.sin(lat));
+            var _z = rayon* (Math.cos(lat)  * Math.sin(long));
 
             cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW  ,
             this._celH  );
 
-            /*
-            cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW)),
-            (this._posY + (currentRow) * (this._celH)),0 ),
+            
+            //flat
+            /*cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW*spacing)),
+            (this._posY + (currentRow) * (this._celH*spacing)),0 ),
             this._celW,
             this._celH  );*/
             
             cell[i].drawSquare(scene,Math.random() *0xffffff);     
             cell[i].lookAtZero();
-            
             currentCounter++;        
             currentIndex++;   
 
