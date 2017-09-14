@@ -30,10 +30,7 @@ class Square
 
         this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
         this.planeMesh.position.set(this.x,this.y,this.z);
-      
-
-
-        
+            
         scene.add(this.planeMesh);
     }
     setPosition(x,y,z)
@@ -46,7 +43,6 @@ class Square
         v.subVectors(this.planeMesh.position, new THREE.Vector3(0,0,0)).add(this.planeMesh.position);
         this.planeMesh.lookAt(v);
 
-        console.log(this.planeMesh.rotation);
         
     }
     setPosSpherical(spherical)

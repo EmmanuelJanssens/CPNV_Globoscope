@@ -1,7 +1,12 @@
 class Meridian
 {
-    constructor(maxW,maxH,minW,minH,celW,celH,posX,posY,scale,cellSpace)
+    constructor(maxW,maxH,minW,minH,celW,celH,posX,posY,scale,cellSpace,id)
     {
+        this.ID = id;
+        this.latID;
+        this.longID;
+
+        
         this._maxW = maxW;
         this._maxH = maxH;
         
@@ -27,6 +32,9 @@ class Meridian
         this.cell = new Array(maxW * maxH);
         this._cellSpace = cellSpace;
         this._totalCells =416;
+
+        this._data = [] ;
+        
     }
 
     drawMeridianTable()
@@ -62,6 +70,7 @@ class Meridian
         }
     }
 
+
     initMeridianCells()
     {
 
@@ -72,7 +81,9 @@ class Meridian
         var startCollPos = 5;
         var currentCounter = 0;
         var currentRow = 0;
+        var longSpacing = spacing;
 
+        var calcSpacing = 0;
         var counter = 0;
 
 
@@ -88,10 +99,21 @@ class Meridian
 
         for(var i = 0; i < this._totalCells; i++)
         {
+
             if(currentCounter >= col[counter])
             {       
                 currentRow++;                                        
-                currentCounter = 0;     
+                currentCounter = 0; 
+                if(north)
+                {
+                    calcSpacing++;
+                }
+                else
+                {
+                    calcSpacing--;
+                }   
+                console.log(calcSpacing + " " + currentRow);   
+                
             }     
         
             
@@ -110,13 +132,13 @@ class Meridian
                 {
                     startCollPos =0;
                     north =  false;
-                }
+                }                
             }
-
+            
             //spherical W/ mercator projection
             //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
 
-            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*spacing))/rayon;
+            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*(longSpacing)))/rayon;
             var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*spacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
@@ -134,14 +156,18 @@ class Meridian
             this._celW,
             this._celH  );*/
             
-            cell[i].drawSquare(scene,Math.random() *0xffffff);     
+            cell[i].drawSquare(scene,0xffffff);     
             cell[i].lookAtZero();
             currentCounter++;        
             currentIndex++;   
 
+            this._data[i] = { meridien: this.ID, longitude: startCollPos, lattitude: currentRow};
+
         }         
     }
-
+    getData()
+    {
+    }
     getWidth()
     {
         return this._Width;
