@@ -43,6 +43,8 @@ class Square
         var texture; 
 
         texture =  this.textureLoader.load( file );
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.y = - 1;
         planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
 
 
