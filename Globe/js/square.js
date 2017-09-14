@@ -15,24 +15,47 @@ class Square
 
         this.planeMesh;
         this.vector = new THREE.Vector3();
+        this.textureLoader = new THREE.DDSLoader();
+        
     }   
-    drawSquare(scene,color)
+    fileExist(file)
+    {
+        var http = new XMLHttpRequest();
+        http.open('HEAD',file,false);
+        http.send();
+
+        return http.status != 404;
+    }
+    drawSquare(scene,mer,lat,long)
     {
 
         var planeGeometry,planeMaterial,numCollisions;
             
-        planeGeometry = new THREE.PlaneGeometry(this.w,this.h,2,2);
+        planeGeometry = new THREE.PlaneBufferGeometry(this.w,this.h,2,2);
         planeGeometry.dynamic = true;
 
-        planeMaterial = new THREE.MeshPhongMaterial({
-            color
-        });
+
+
+       
+        var file = "images/lot2/"+mer+"-"+lat+"-"+long+".dds";
+        
+        var planeMaterial;
+        var texture; 
+
+        texture =  this.textureLoader.load( file );
+        planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
+
+
+
+       // var planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
 
         this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
         this.planeMesh.position.set(this.x,this.y,this.z);
             
         scene.add(this.planeMesh);
     }
+
+
     setPosition(x,y,z)
     {
         this.planeMesh.position.set(x,y,z);       

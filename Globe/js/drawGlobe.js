@@ -24,7 +24,7 @@ var totalH = meridianH * cellH;
 var textSpacing = 1;
 
 var scale = 1;
-var cellSpacing = 3;
+var cellSpacing = 2;
 
 initialize();
 draw();
@@ -74,7 +74,7 @@ function initialize()
 
     for(var i = 0; i <totalMeridians; i++)
     {
-        meridians[i] = new Meridian(meridianW, meridianH, meridianMinW, meridianMinH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )   ,-(cellH * cellSpacing * meridianH)/2,scale,1);   
+        meridians[i] = new Meridian(meridianW, meridianH, meridianMinW, meridianMinH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )   ,-(cellH * cellSpacing * meridianH)/2,scale,1,i);   
         meridians[i].initMeridianCells();
     }
 
