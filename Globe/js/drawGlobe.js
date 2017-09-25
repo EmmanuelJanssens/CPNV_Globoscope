@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =60 ;
 var cellH =100;
 
-var totalMeridians = 12;
+var totalMeridians = 6;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -75,7 +75,6 @@ function initialize()
     for(var i = 0; i <totalMeridians; i++)
     {
         meridians[i] = new Meridian(meridianW, meridianH, meridianMinW, meridianMinH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )   ,-(cellH * cellSpacing * meridianH)/2,scale,1,i);   
-        meridians[i].initMeridianCells();
     }
 
     // CONTROLS

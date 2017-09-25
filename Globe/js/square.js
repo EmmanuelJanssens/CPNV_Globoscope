@@ -43,18 +43,24 @@ class Square
         var texture; 
 
         texture =  this.textureLoader.load( file );
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.y = - 1;
-        planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
 
+        var f = file;
+        if(texture != null)
+        {
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.y = - 1;
+            planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
+    
+    
+    
+           // var planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
+    
+            this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+            this.planeMesh.position.set(this.x,this.y,this.z);
+                
+            scene.add(this.planeMesh);
+        }
 
-
-       // var planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
-
-        this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-        this.planeMesh.position.set(this.x,this.y,this.z);
-            
-        scene.add(this.planeMesh);
     }
 
 

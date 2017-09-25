@@ -70,10 +70,7 @@ class Meridian
     }
 
 
-    initMeridianCells()
-    {
 
-    }
 
     drawMeridianCells(scene,rayon,spacing)
     {
@@ -136,7 +133,7 @@ class Meridian
             //spherical W/ mercator projection
             //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
             
-            var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*(longSpacing)))/rayon;
+            /*var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*(longSpacing)))/rayon;
             var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*spacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
@@ -145,17 +142,17 @@ class Meridian
 
             cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW  ,
-            this._celH  );
+            this._celH  );*/
 
             
             //flat
-           /* cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW*spacing)),
+            cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW*spacing)),
             (this._posY + (currentRow) * (this._celH*spacing)),0 ),
             this._celW,
-            this._celH  );*/
+            this._celH  );
             //cell[i].drawSquare(scene,0xffffff);
             cell[i].drawSquare(scene,this.ID,currentRow,currentCounter);  
-            cell[i].lookAtZero();   
+            //cell[i].lookAtZero();   
             currentCounter++;        
             currentIndex++;   
 
