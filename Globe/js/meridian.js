@@ -1,6 +1,6 @@
 class Meridian
 {
-    constructor(maxW,maxH,minW,minH,celW,celH,posX,posY,scale,cellSpace,id)
+    constructor(maxW,maxH,celW,celH,posX,posY,scale,cellSpace,id)
     {
         this.ID = id;
 
@@ -22,59 +22,20 @@ class Meridian
 
 
         
-        this._breakPoints = new Array(4,7,11,15,21,33,39,44,47,50,54);    
-        this._currentBreakPoint = 1;
-
         this._Width =  maxW * celW * scale ;
         this._Height =  maxH * celH * scale;
 
         this.cell = new Array(maxW * maxH);
         this._cellSpace = cellSpace;
-        this._totalCells =416;
+        this._totalCells =0;
 
         this._data = [] ;
         
     }
 
-    drawMeridianTable()
-    {
-        let rows = new Array(this._maxW);
-        let col = new Array(this._maxH);
-    
-        //draw collumn count
-        for(var i = 0; i < this._maxW;i++)
-        {
-            rows[i] = new Square(   new Point(this._posX + i * this._celW + this._celW,
-                                    this._posY),
-                                    this._celW,
-                                    this._celH  );
-            rows[i].drawSquare();
-            _ctx.font= "10px Arial";
-            _ctx.fillText(  i+1,
-                            this._posX + i * this._celW + textSpacing + this._celW,
-                            this._posY + this._celW + textSpacing   );
-        }
-        //draw row count
-        for(var i = 0; i < this._maxH; i++)
-        {
-            col[i] = new Square(    new Point(this._posX,
-                                    this._posY + i*this._celH + this. _celH),
-                                    this._celW,
-                                    this._celH  );
-            col[i].drawSquare();
-            _ctx.font= "10px Arial";
-            _ctx.fillText(  i+1,
-                            this._posX + textSpacing,
-                            this._posY + i*this._celH+this._celW + textSpacing + this._celH );        
-        }
-    }
-
-
-
-
     drawMeridianCells(scene,rayon,spacing)
     {
-        var startCollPos = 5;
+        var startCollPos = 6;
         var currentCounter = 0;
         var currentRow = 0;
         var longSpacing = spacing;
@@ -92,6 +53,12 @@ class Meridian
 
         var north = true;
         
+        this._totalCells = 0;
+
+        for(var i = 0; i < 12; i ++)
+        {
+            this._totalCells  += col[i] * rows[i];
+        }
 
         for(var i = this._totalCells; i > 0; i--)
         {
@@ -99,16 +66,7 @@ class Meridian
             if(currentCounter >= col[counter])
             {       
                 currentRow++;                                        
-                currentCounter = 0; 
-                if(north)
-                {
-                    calcSpacing++;
-                }
-                else
-                {
-                    calcSpacing--;
-                }   
-                
+                currentCounter = 0;               
             }     
             
             
@@ -122,12 +80,11 @@ class Meridian
                     startCollPos--;
                 else
                     startCollPos++;
-                
                 if(startCollPos < 0)
                 {
-                    startCollPos =0;
                     north =  false;
-                }                
+                }       
+                
             }
             
             //spherical W/ mercator projection

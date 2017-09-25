@@ -49,11 +49,11 @@ class Square
         {
             texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.y = - 1;
-            planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
+            //planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
     
     
     
-           // var planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
+         planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
     
             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
             this.planeMesh.position.set(this.x,this.y,this.z);
