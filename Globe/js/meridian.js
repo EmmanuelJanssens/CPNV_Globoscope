@@ -35,7 +35,7 @@ class Meridian
 
     drawMeridianCells(scene,rayon,spacing)
     {
-        var startCollPos = 6;
+        var startCollPos = 5;
         var currentCounter = 0;
         var currentRow = 0;
         var longSpacing = spacing;

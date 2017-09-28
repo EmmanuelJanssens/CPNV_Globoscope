@@ -6,8 +6,8 @@ var meridians;
 
 
 //dimensions d'un méridien
-var meridianW = 14;
-var meridianH = 60;
+var meridianW = 12  ;
+var meridianH = 54;
 
 var meridianMinW = 2;
 var meridianMinH = 11;
