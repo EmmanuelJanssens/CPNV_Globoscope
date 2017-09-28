@@ -6,8 +6,8 @@ var meridians;
 
 
 //dimensions d'un méridien
-var meridianW = 12  ;
-var meridianH = 54;
+var meridianW = 14  ;
+var meridianH = 60;
 
 var meridianMinW = 2;
 var meridianMinH = 11;
@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =60 ;
 var cellH =100;
 
-var totalMeridians = 1;
+var totalMeridians = 3;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -23,7 +23,7 @@ var totalH = meridianH * cellH;
 //dimensions d'une cellule
 var textSpacing = 1;
 
-var scale = 1;
+var scale = .4;
 var cellSpacing = 2;
 
 initialize();
@@ -47,7 +47,7 @@ function draw()
   //D = (140 * 12 * 3 * 12)/(2*3.14)
   for(var i = 0; i < totalMeridians; i++)
   {
-      meridians[i].drawMeridianCells(scene, ((cellW) * totalMeridians *cellSpacing * meridianW)/(2*Math.PI),cellSpacing);
+      meridians[i].drawMeridianCells(scene, (((cellW) * totalMeridians *cellSpacing * meridianW)/(2*Math.PI))*scale,cellSpacing);
   } 
 
   var axes = new THREE.AxisHelper(5000);
@@ -74,7 +74,7 @@ function initialize()
 
     for(var i = 0; i <totalMeridians; i++)
     {
-        meridians[i] = new Meridian(meridianW, meridianH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )   ,-(cellH * cellSpacing * meridianH)/2,scale,1,i);   
+        meridians[i] = new Meridian(meridianW, meridianH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )*scale   ,(-(cellH * cellSpacing * meridianH)/2)*scale,scale,1,i);   
     }
 
     // CONTROLS

@@ -35,7 +35,7 @@ class Meridian
 
     drawMeridianCells(scene,rayon,spacing)
     {
-        var startCollPos = 5;
+        var startCollPos = 6;
         var currentCounter = 0;
         var currentRow = 0;
         var longSpacing = spacing;
@@ -45,8 +45,8 @@ class Meridian
 
 
         let cell = new Array(this._totalCells);
-        var rows = [4,3,4,4,6,6,6,6,4,4,3,4];
-        var col = [2,4,6,8,10,12,12,10,8,6,4,2];
+        var rows = [4,3,4,4,4,5,6,6,5,4,4,4,3,4];
+        var col = [2,4,6,8,10,12,14,14,12,10,8,6,4,2];
         var res = Number(col[counter]) * Number(rows[counter])  ;
 
         var currentIndex = 0;
@@ -55,11 +55,12 @@ class Meridian
         
         this._totalCells = 0;
 
-        for(var i = 0; i < 12; i ++)
+        for(var i = 0; i < 14; i ++)
         {
             this._totalCells  += col[i] * rows[i];
         }
 
+        console.log(this._totalCells);
         for(var i = this._totalCells; i > 0; i--)
         {
 
@@ -82,6 +83,7 @@ class Meridian
                     startCollPos++;
                 if(startCollPos < 0)
                 {
+                    startCollPos = 0;
                     north =  false;
                 }       
                 

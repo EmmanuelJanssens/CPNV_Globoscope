@@ -15,7 +15,7 @@ class Square
 
         this.planeMesh;
         this.vector = new THREE.Vector3();
-        this.textureLoader = new THREE.DDSLoader();
+        this.textureLoader = new THREE.TextureLoader();
         
     }   
     fileExist(file)
@@ -37,7 +37,7 @@ class Square
 
 
        
-        var file = "images/lot2/"+mer+"-"+lat+"-"+long+".dds";
+        var file = "images/lot2/"+(mer+1)+"-"+lat+"-"+long+".jpg";
         
         var planeMaterial;
         var texture; 
@@ -48,12 +48,12 @@ class Square
         if(texture != null)
         {
             texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.y = - 1;
-            //planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
+           // texture.repeat.y = - 1;
+            planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
     
     
     
-         planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
+            //planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
     
             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
             this.planeMesh.position.set(this.x,this.y,this.z);
