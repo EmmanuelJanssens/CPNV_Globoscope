@@ -1,99 +1,123 @@
 class Meridian
 {
-    constructor(maxW,maxH,celW,celH,posX,posY,scale,cellSpace,id)
+    constructor(maxW,maxH,celW,celH,posX,posY,scale,id)
     {
         this.ID = id;
 
-
-        
-        this._maxW = maxW;
-        this._maxH = maxH;
-        
-        this._minW = 2;
-        this._minH = 11;        
         
         this._celW = celW * scale ;
         this._celH = celH * scale;
 
-        this.position = new Point(posX,posY);
+        var position = new Point(posX,posY);
 
-        this._posX = this.position.x  ;
-        this._posY = this.position.y  ;
-
-
-        
+        this._posX = position.x  ;
+        this._posY = position.y  ;
+    
         this._Width =  maxW * celW * scale ;
         this._Height =  maxH * celH * scale;
 
-        this.cell = new Array(maxW * maxH);
-        this._cellSpace = cellSpace;
-        this._totalCells =0;
-
-        this._data = [] ;
-        
+        this._totalCells =0;        
     }
 
-    drawMeridianCells(scene,rayon,spacing)
+    drawMeridianCells(scene,ray)
     {
-        var startCollPos = 6;
-        var currentCounter = 0;
+        var startCollPos = 0;
+
         var currentRow = 0;
-        var longSpacing = spacing;
-
-        var calcSpacing = 0;
-        var counter = 0;
-
-
-        let cell = new Array(this._totalCells);
-        var rows = [4,3,4,4,4,5,6,6,5,4,4,4,3,4];
-        var col = [2,4,6,8,10,12,14,14,12,10,8,6,4,2];
-        var res = Number(col[counter]) * Number(rows[counter])  ;
-
         var currentIndex = 0;
-
         var north = true;
         
-        this._totalCells = 0;
+        var xSpacing = 2;
+        var ySpacing = 2;
 
+        //utiliser pour ce reperer dans les nombres de colonnes/lignes maximal
+        var counter = 0;
+
+        //compe le nombre de collones que l'on a passé
+        var collCounter = 0;
+        //nombre de ligne
+        var rowsNum = [4,3,4,4,4,5,6,6,5,4,4,4,3,4];
+        //nombre de collones
+        var collNum = [2,4,6,8,10,12,14,14,12,10,8,6,4,2];
+        //total de carrés dans une section de méridiens
+        //les sections sont définies par le changement de nombre de colionnes
+        var block = Number(collNum[counter]) * Number(rowsNum[counter])  ;
+
+        //initialiser a 0
+        this._totalCells = 0;        
         for(var i = 0; i < 14; i ++)
         {
-            this._totalCells  += col[i] * rows[i];
+            this._totalCells  += collNum[i] * rowsNum[i];
         }
 
-        console.log(this._totalCells);
+        let cell = new Array(this._totalCells);
+        
+
+        var rayon = ray* xSpacing;   
+
+        //total cell width
+        var tot = collNum.length * 2;
         for(var i = this._totalCells; i > 0; i--)
         {
-
-            if(currentCounter >= col[counter])
+            
+            //si on dépasse le nombre de colones maximal on change de ligne
+            if(collCounter >= collNum[counter])
             {       
                 currentRow++;                                        
-                currentCounter = 0;               
+                collCounter = 0;               
             }     
             
-            
-            if( currentIndex >= res)
+            //si le compteur courrant est supérieur au nombre de block présent dans une section 
+            //on diminue de 1 la position de départ de la prochaine section
+            if( currentIndex >= block)
             {           
                 counter++;  
-                res = Number(col[counter]) * Number(rows[counter])  ;                        
+                block = Number(collNum[counter]) * Number(rowsNum[counter])  ;                        
                 currentIndex = 0;
 
-                if(north)
-                    startCollPos--;
-                else
-                    startCollPos++;
-                if(startCollPos < 0)
-                {
-                    startCollPos = 0;
-                    north =  false;
-                }       
+                
                 
             }
             
             //spherical W/ mercator projection
             //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
             
-            /*var long = (this._posX  +(currentCounter+startCollPos) * (this._celW*(longSpacing)))/rayon;
-            var lat = 2*Math.atan(Math.exp(  (this._posY + (currentRow) * (this._celH*spacing))/rayon )) - Math.PI/2;
+            /*if(collNum[counter] == 2)
+            {
+                //1 à 28
+                //0 à 27
+                //26
+                xSpacing = (tot)/2;
+            }
+            else if(collNum[counter] == 4)
+            {
+                xSpacing = (tot)/4 ;
+            }
+            else if(collNum[counter] == 6)
+            {
+                xSpacing = (tot)/6;
+            }
+            else if(collNum[counter] == 8)
+            {
+                xSpacing = (tot)/8;    
+            }
+            else if(collNum[counter] == 10)
+            {
+                xSpacing = (tot)/10;    
+            }
+            else if(collNum[counter] == 12)
+            {
+                xSpacing = (tot)/12;  
+            }
+            else if(collNum[counter] == 14)
+            {
+                xSpacing = (tot)/14;
+            }*/
+
+
+            rayon = ray*2;
+            var long = (this._posX * 2 +(collCounter ) * (this._celW *(tot/collNum[counter]) ))/rayon;
+            var lat = 2*Math.atan(Math.exp( (this._posY + (currentRow) * (this._celH*ySpacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
             var _y =  rayon* (Math.sin(lat));
@@ -101,18 +125,18 @@ class Meridian
 
             cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW  ,
-            this._celH  );*/
+            this._celH  );
 
             
             //flat
-            cell[i] = new Square(   new Point((this._posX  +(currentCounter+startCollPos) * (this._celW*spacing)),
-            (this._posY + (currentRow) * (this._celH*spacing)),0 ),
+            /*cell[i] = new Square(   new Point((this._posX * 2 +(collCounter ) * (this._celW *xSpacing)),
+            (this._posY + (currentRow) * (this._celH*ySpacing)),0 ),
             this._celW,
-            this._celH  );
+            this._celH  );*/
             //cell[i].drawSquare(scene,0xffffff);
-            cell[i].drawSquare(scene,this.ID,currentRow,currentCounter);  
-            //cell[i].lookAtZero();   
-            currentCounter++;        
+            cell[i].drawSquare(scene,this.ID,currentRow,collCounter);  
+            cell[i].lookAtZero();   
+            collCounter++;        
             currentIndex++;   
 
         }         

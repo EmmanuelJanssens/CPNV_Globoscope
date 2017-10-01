@@ -15,7 +15,7 @@ var meridianMinH = 11;
 var cellW =60 ;
 var cellH =100;
 
-var totalMeridians = 3;
+var totalMeridians = 12;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -27,32 +27,8 @@ var scale = .4;
 var cellSpacing = 2;
 
 initialize();
-draw();
 animate();
 
-function draw()
-{
-  var numCollisions = 0;
-  var pointLight = new THREE.DirectionalLight(0xbbbbbb);
-  pointLight.position.set(100, 100, 500);
-  scene.add(pointLight);
-
-  var ambientLight = new THREE.AmbientLight(0xbbbbbb);
-  scene.add(ambientLight);
-
-
-
-  //D = 2*PI*R
-  //R = D/(2*PI)
-  //D = (140 * 12 * 3 * 12)/(2*3.14)
-  for(var i = 0; i < totalMeridians; i++)
-  {
-      meridians[i].drawMeridianCells(scene, (((cellW) * totalMeridians *cellSpacing * meridianW)/(2*Math.PI))*scale,cellSpacing);
-  } 
-
-  var axes = new THREE.AxisHelper(5000);
-  scene.add(axes);
-}
 
 
 
@@ -74,7 +50,7 @@ function initialize()
 
     for(var i = 0; i <totalMeridians; i++)
     {
-        meridians[i] = new Meridian(meridianW, meridianH, cellW , cellH ,( i * meridianW * cellW*cellSpacing )*scale   ,(-(cellH * cellSpacing * meridianH)/2)*scale,scale,1,i);   
+        meridians[i] = new Meridian(meridianW, meridianH, cellW , cellH ,( i * meridianW * cellW )*scale   ,(-(cellH * cellSpacing * meridianH)/2)*scale,scale,i);   
     }
 
     // CONTROLS
@@ -82,6 +58,33 @@ function initialize()
     controls.minDistance = 132;
     controls.maxDistance = 10000;
 
+    var pointLight = new THREE.DirectionalLight(0xbbbbbb);
+    pointLight.position.set(100, 100, 500);
+    scene.add(pointLight);
+
+    var ambientLight = new THREE.AmbientLight(0xbbbbbb);
+    scene.add(ambientLight);
+
+
+    //Draw 
+    //D = 2*PI*R
+    //R = D/(2*PI)
+    //D = (140 * 12 * 3 * 12)/(2*3.14)
+    for(var i = 0; i < totalMeridians; i++)
+    {
+        meridians[i].drawMeridianCells(scene, (((cellW) * totalMeridians  * meridianW)/(2*Math.PI))*scale);
+    } 
+
+    var axes = new THREE.AxisHelper(5000);
+    scene.add(axes);
+
+}
+function render()
+{
+    controls.update();
+
+
+    renderer.render(scene, camera);     
 }
 
 function animate() 
@@ -91,10 +94,3 @@ function animate()
 }
 
 
-function render()
-{
-    controls.update();
-
-
-    renderer.render(scene, camera);     
-}

@@ -2,7 +2,7 @@
 //dessiner un carré
 class Square
 {
-    constructor(pos,_w,_h,)
+    constructor(pos,_w,_h)
     {
         this.position = pos;
 
@@ -26,41 +26,40 @@ class Square
 
         return http.status != 404;
     }
+  
     drawSquare(scene,mer,lat,long)
     {
 
         var planeGeometry,planeMaterial,numCollisions;
             
-        planeGeometry = new THREE.PlaneBufferGeometry(this.w,this.h,2,2);
+        planeGeometry = new THREE.PlaneBufferGeometry(this.w,this.h);
         planeGeometry.dynamic = true;
 
 
-
        
-        var file = "images/lot2/"+(mer+1)+"-"+lat+"-"+long+".jpg";
-        
+        var file ="images/lot2/"+(mer+1)+"-"+lat+"-"+long+".jpg" ;
         var planeMaterial;
         var texture; 
 
-        texture =  this.textureLoader.load( file );
-
-        var f = file;
-        if(texture != null)
+       /* if(this.fileExist(file))
         {
+            texture =  this.textureLoader.load( file );      
             texture.wrapT = THREE.RepeatWrapping;
-           // texture.repeat.y = - 1;
-            planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );
-    
-    
-    
-            //planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
-    
+            // texture.repeat.y = - 1;
+             planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
+             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+             this.planeMesh.position.set(this.x,this.y,this.z);
+                 
+             scene.add(this.planeMesh);
+        }
+        else*/
+        {
+            planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
             this.planeMesh.position.set(this.x,this.y,this.z);
-                
             scene.add(this.planeMesh);
+            
         }
-
     }
 
 
