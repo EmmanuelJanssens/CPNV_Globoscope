@@ -17,18 +17,20 @@ class Meridian
         this._Height =  maxH * celH * scale;
 
         this._totalCells =0;        
+
     }
 
-    drawMeridianCells(scene,ray)
+    drawMeridianCells(scene,ray,orSpace)
     {
         var startCollPos = 0;
 
         var currentRow = 0;
         var currentIndex = 0;
         var north = true;
-        
-        var xSpacing = 2;
-        var ySpacing = 2;
+
+        var originalSpacing = orSpace;        
+        var xSpacing = originalSpacing;
+        var ySpacing = originalSpacing;
 
         //utiliser pour ce reperer dans les nombres de colonnes/lignes maximal
         var counter = 0;
@@ -56,7 +58,14 @@ class Meridian
         var rayon = ray* xSpacing;   
 
         //total cell width
-        var tot = collNum.length * 2;
+        var totalWidth = collNum.length * originalSpacing;
+        var totalHeight = 0;
+        for( var i = 0; i < rowsNum.length; i++)
+        {
+            totalHeight += rowsNum[i];
+        }
+        totalHeight *=originalSpacing;
+
         for(var i = this._totalCells; i > 0; i--)
         {
             
@@ -115,9 +124,9 @@ class Meridian
             }*/
 
 
-            rayon = ray*2;
-            var long = (this._posX * 2 +(collCounter ) * (this._celW *(tot/collNum[counter]) ))/rayon;
-            var lat = 2*Math.atan(Math.exp( (this._posY + (currentRow) * (this._celH*ySpacing))/rayon )) - Math.PI/2;
+            rayon = ray*originalSpacing;
+            var long = ( this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) ))/rayon;
+            var lat = 2*Math.atan(Math.exp( (this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
             var _y =  rayon* (Math.sin(lat));
@@ -129,8 +138,8 @@ class Meridian
 
             
             //flat
-            /*cell[i] = new Square(   new Point((this._posX * 2 +(collCounter ) * (this._celW *xSpacing)),
-            (this._posY + (currentRow) * (this._celH*ySpacing)),0 ),
+            /*cell[i] = new Square(   new Point( this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) ),
+             this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing),0 ),
             this._celW,
             this._celH  );*/
             //cell[i].drawSquare(scene,0xffffff);
