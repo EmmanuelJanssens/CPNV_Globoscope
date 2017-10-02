@@ -37,23 +37,25 @@ class Square
 
 
        
-        var file ="images/lot2/"+(mer+1)+"-"+lat+"-"+long+".jpg" ;
+        var file ="images/DB/lot2/100-125/"+(mer+1)+"-"+lat+"-"+long+".jpg" ;
+        //ar file ="images/DB/lot2/100-125/3-37-3.jpg" ;
         var planeMaterial;
         var texture; 
 
-       /* if(this.fileExist(file))
+       /*if(this.fileExist(file))
         {
             texture =  this.textureLoader.load( file );      
             texture.wrapT = THREE.RepeatWrapping;
             // texture.repeat.y = - 1;
-             planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
-             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-             this.planeMesh.position.set(this.x,this.y,this.z);
-                 
-             scene.add(this.planeMesh);
+            planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
+            this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+            this.planeMesh.position.set(this.x,this.y,this.z);
+            console.log(file);     
+            scene.add(this.planeMesh);
         }
         else*/
         {
+            
             planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
             this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
             this.planeMesh.position.set(this.x,this.y,this.z);

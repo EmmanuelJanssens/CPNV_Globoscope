@@ -13,9 +13,9 @@ var meridianMinW = 2;
 var meridianMinH = 11;
 
 var cellW =60 ;
-var cellH =60;
+var cellH =120;
 
-var totalMeridians = 12;
+var totalMeridians = 12  ;
 //dimensions totales du canvas
 var totalW = meridianW * cellW;
 var totalH = meridianH * cellH;
@@ -24,13 +24,14 @@ var totalH = meridianH * cellH;
 var textSpacing = 1;
 
 var scale = 1;
-var cellSpacing = 3;
+var cellSpacing = 2;
 
 initialize();
 animate();
 
 
-
+//decoration
+var sphere;
 
 function initialize()
 {
@@ -78,6 +79,15 @@ function initialize()
     var axes = new THREE.AxisHelper(5000);
     scene.add(axes);
 
+    //Dessiner le sphère
+    var textureLoader = new THREE.TextureLoader();
+    var sphereGeometry = new THREE.SphereGeometry((((cellW * totalMeridians  * meridianW)/(2*Math.PI))*scale)*2-50,20,20);
+
+    var texture =  textureLoader.load( "images/earth.jpg" );      
+     sphereMat = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
+     var sphereMesh = new THREE.Mesh(sphereGeometry, sphereMat);
+         
+     //scene.add(sphereMesh);
 }
 function render()
 {

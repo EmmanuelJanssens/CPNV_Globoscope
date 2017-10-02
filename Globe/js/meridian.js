@@ -22,7 +22,7 @@ class Meridian
 
     drawMeridianCells(scene,ray,orSpace)
     {
-        var startCollPos = 0;
+        var startCollPos = 6;
 
         var currentRow = 0;
         var currentIndex = 0;
@@ -31,16 +31,17 @@ class Meridian
         var originalSpacing = orSpace;        
         var xSpacing = originalSpacing;
         var ySpacing = originalSpacing;
-
+        var rayon = ray* xSpacing;   
+        let cell;
+        
         //utiliser pour ce reperer dans les nombres de colonnes/lignes maximal
         var counter = 0;
-
         //compe le nombre de collones que l'on a passé
         var collCounter = 0;
         //nombre de ligne
         var rowsNum = [4,3,4,4,4,5,6,6,5,4,4,4,3,4];
         //nombre de collones
-        var collNum = [2,4,6,8,10,12,14,14,12,10,8,6,4,2];
+        var collNum = [2,4,6,11,12,13,14,14,13,12,11,6,4,2];
         //total de carrés dans une section de méridiens
         //les sections sont définies par le changement de nombre de colionnes
         var block = Number(collNum[counter]) * Number(rowsNum[counter])  ;
@@ -51,11 +52,9 @@ class Meridian
         {
             this._totalCells  += collNum[i] * rowsNum[i];
         }
-
-        let cell = new Array(this._totalCells);
+        cell = new Array(this._totalCells);
         
-
-        var rayon = ray* xSpacing;   
+        
 
         //total cell width
         var totalWidth = collNum.length * originalSpacing;
@@ -82,10 +81,18 @@ class Meridian
             {           
                 counter++;  
                 block = Number(collNum[counter]) * Number(rowsNum[counter])  ;                        
-                currentIndex = 0;
-
+                currentIndex = 0;     
                 
+                if(north)
+                    startCollPos--;
+                else
+                    startCollPos++;
                 
+                if(startCollPos < 0)
+                {
+                    startCollPos = 0;
+                    north =  false;
+                }
             }
             
             //spherical W/ mercator projection
@@ -125,33 +132,40 @@ class Meridian
 
 
             rayon = ray*originalSpacing;
+            
+            //Longitude
+            //Avec espacement correct
             var long = ( this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) ))/rayon;
+            //Avec espacement "incorect"
+            //var long = ( this._posX * originalSpacing +(collCounter + startCollPos ) * (this._celW *xSpacing ))/rayon;   
+            //Latitude
             var lat = 2*Math.atan(Math.exp( (this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing))/rayon )) - Math.PI/2;
 
             var _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
             var _y =  rayon* (Math.sin(lat));
             var _z = rayon* (Math.cos(lat)  * Math.sin(long));
+            
 
+            //flat
+            /*  
+            //Avec espacement correct
+            var _x = this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) );
+            //Avec espacement "incorrect"
+            //var _x = this._posX * originalSpacing +(collCounter + startCollPos ) * (this._celW *xSpacing );            
+            var _y = this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing);
+            var _z = 0;
+            */
             cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW  ,
             this._celH  );
 
             
-            //flat
-            /*cell[i] = new Square(   new Point( this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) ),
-             this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing),0 ),
-            this._celW,
-            this._celH  );*/
-            //cell[i].drawSquare(scene,0xffffff);
-            cell[i].drawSquare(scene,this.ID,currentRow,collCounter);  
+            cell[i].drawSquare(scene,this.ID,currentRow,collCounter+startCollPos);  
             cell[i].lookAtZero();   
             collCounter++;        
             currentIndex++;   
 
         }         
-    }
-    getData()
-    {
     }
     getWidth()
     {
