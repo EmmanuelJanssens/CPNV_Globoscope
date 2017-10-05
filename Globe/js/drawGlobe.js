@@ -87,7 +87,7 @@ function initialize()
      sphereMat = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
      var sphereMesh = new THREE.Mesh(sphereGeometry, sphereMat);
          
-     //scene.add(sphereMesh);
+     scene.add(sphereMesh);
 }
 function render()
 {
