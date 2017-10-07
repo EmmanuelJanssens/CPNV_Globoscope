@@ -47,8 +47,9 @@ class Meridian
         var block = Number(collNum[counter]) * Number(rowsNum[counter])  ;
 
         //initialiser a 0
-        this._totalCells = 0;        
-        for(var i = 0; i < 14; i ++)
+        this._totalCells = 0;  
+        var i = 0;      
+        for( i = 0; i < 14; i ++)
         {
             this._totalCells  += collNum[i] * rowsNum[i];
         }
@@ -59,13 +60,13 @@ class Meridian
         //total cell width
         var totalWidth = collNum.length * originalSpacing;
         var totalHeight = 0;
-        for( var i = 0; i < rowsNum.length; i++)
+        for(  i = 0; i < rowsNum.length; i++)
         {
             totalHeight += rowsNum[i];
         }
         totalHeight *=originalSpacing;
 
-        for(var i = this._totalCells; i > 0; i--)
+        for( i = this._totalCells; i > 0; i--)
         {
             
             //si on dépasse le nombre de colones maximal on change de ligne
@@ -97,39 +98,7 @@ class Meridian
             
             //spherical W/ mercator projection
             //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
-            
-            /*if(collNum[counter] == 2)
-            {
-                //1 à 28
-                //0 à 27
-                //26
-                xSpacing = (tot)/2;
-            }
-            else if(collNum[counter] == 4)
-            {
-                xSpacing = (tot)/4 ;
-            }
-            else if(collNum[counter] == 6)
-            {
-                xSpacing = (tot)/6;
-            }
-            else if(collNum[counter] == 8)
-            {
-                xSpacing = (tot)/8;    
-            }
-            else if(collNum[counter] == 10)
-            {
-                xSpacing = (tot)/10;    
-            }
-            else if(collNum[counter] == 12)
-            {
-                xSpacing = (tot)/12;  
-            }
-            else if(collNum[counter] == 14)
-            {
-                xSpacing = (tot)/14;
-            }*/
-
+     
 
             rayon = ray*originalSpacing;
             
@@ -147,14 +116,14 @@ class Meridian
             
 
             //flat
-            /*  
+            
             //Avec espacement correct
-            var _x = this._posX * originalSpacing +(collCounter ) * (this._celW *(totalWidth/collNum[counter]) );
+            var _x = this._posX * originalSpacing + (collCounter ) * (this._celW *(totalWidth/collNum[counter]) );
             //Avec espacement "incorrect"
             //var _x = this._posX * originalSpacing +(collCounter + startCollPos ) * (this._celW *xSpacing );            
             var _y = this._posY *originalSpacing+ (currentRow) * (this._celH*originalSpacing);
             var _z = 0;
-            */
+        
             cell[i] = new Square(new Point(_x,_y,_z ),
             this._celW  ,
             this._celH  );

@@ -16,56 +16,28 @@ class Square
         this.planeMesh;
         this.vector = new THREE.Vector3();
         this.textureLoader = new THREE.TextureLoader();
+
         
     }   
-    fileExist(file)
-    {
-        var http = new XMLHttpRequest();
-        http.open('HEAD',file,false);
-        http.send();
 
-        return http.status != 404;
-    }
   
-    drawSquare(scene,mer,lat,long)
+    drawSquare(scene,texture,geometry,exist)
     {
 
-        var planeGeometry,planeMaterial,numCollisions;
-            
-        planeGeometry = new THREE.PlaneBufferGeometry(this.w,this.h);
-        planeGeometry.dynamic = true;
-
-
-       
-        var file ="images/DB/lot2/100-125/"+(mer+1)+"-"+lat+"-"+long+".jpg" ;
-        //ar file ="images/DB/lot2/100-125/3-37-3.jpg" ;
         var planeMaterial;
-        var texture; 
 
-       if(this.fileExist(file))
+        if(exist)
         {
-            texture =  this.textureLoader.load( file );      
-            texture.wrapT = THREE.RepeatWrapping;
-            // texture.repeat.y = - 1;
             planeMaterial = new THREE.MeshPhongMaterial( {  color: 0xffffff,map: texture } );    
-            this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+            this.planeMesh = new THREE.Mesh(geometry, planeMaterial);
             this.planeMesh.position.set(this.x,this.y,this.z);
-            console.log(file);     
             scene.add(this.planeMesh);
         }
         else
-            {
-                this.planeMesh = null;
-            }
-   /*     else
         {
-            
-            planeMaterial; new THREE.MeshPhongMaterial( {  color: 0xffffff});
-            this.planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-            this.planeMesh.position.set(this.x,this.y,this.z);
-            scene.add(this.planeMesh);
-            
-        }*/
+            this.planeMesh = null;
+        }
+
     }
 
 
