@@ -7,7 +7,7 @@
 
     $obj = json_decode($_POST["x"], false);
     $connexion = getBD();
-    $reponse = "SELECT places.IDImage,NomFichier,mer,lat,lon FROM ".$obj->table." INNER JOIN places ON images.IDImage = places.IDImage WHERE images.IDImage >= 0 ORDER BY mer,lat,lon ";
+    $reponse = "SELECT NomFichier,Pseudo,Slogan FROM images WHERE IDImage = ".$obj->ID;
     $resultats = $connexion->query($reponse);
 
     $output = array();
