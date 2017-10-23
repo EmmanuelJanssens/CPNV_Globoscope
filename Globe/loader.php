@@ -1,8 +1,10 @@
 <?php
     function getBD()
         {
-        $connexion = new mysqli("localhost", "root", "", "globoscope");
-        return $connexion;
+            //$connexion = new mysqli("localhost", "id3116159_admingloboscope", "flocon123", "id3116159_globoscope");
+            $connexion = new mysqli("localhost", "root", "", "globoscope");
+
+            return $connexion;
     }
 
     $obj = json_decode($_POST["x"], false);

@@ -1,16 +1,18 @@
 
 var obj, dbParam, xmlhttp, myObj, x, txt = "";
 
-textureLoader = new THREE.DDSLoader();
 
-function loadData(scene,data,test)
+textureLoader = new THREE.TextureLoader();
+
+function loadData(scene,canvContainer,loadSpinner)
 {
     obj = { "table":"images" };
     dbParam = JSON.stringify(obj);
     
     xmlhttp = new XMLHttpRequest();
 
-
+    canvContainer.style.display = "none";
+    loadSpinner.style.display = "block";
     xmlhttp.onreadystatechange = function() 
     {
         if (this.readyState == 4 && this.status == 200) 
@@ -62,15 +64,12 @@ function loadData(scene,data,test)
             var index = 0;
             var block = rowsNum[counter] * collNum[counter];
             for (x in myObj) 
-            {
-                
-  
-                
+            {            
                 //nombres de cellules dans un méridien    
                 data.push({ "IDImage":myObj[x].IDImage,"file":myObj[x].NomFichier,"mer":myObj[x].mer,"lat":myObj[x].lat,"lon":myObj[x].lon });
                 if(data[x].IDImage != 0)
                 {
-                    file ="images/DB/lot2/128-128/"+data[x].file+".dds";
+                    file ="images/DB/Lot2/100-125/"+data[x].file+".jpg";
 
                     texture =  textureLoader.load( file );      
                     
@@ -138,6 +137,8 @@ function loadData(scene,data,test)
             }
      
 
+            canvContainer.style.display = "block";
+            loadSpinner.style.display = "none";
         }
     };
     xmlhttp.open("POST", "loader.php", true);

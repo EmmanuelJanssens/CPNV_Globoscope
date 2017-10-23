@@ -12,29 +12,43 @@
 					margin: 0px;
 					overflow: hidden;
 				}
-				div 
-				{
-					position: absolute;
-					margin: 0px;
-				}
-
 				#childDetails
 				{
 					display:block;
-					margin-left:auto;
 				}
 				#childImage
 				{
 					display:block;
-					margin-left:auto;
-					margin-right:auto;
-					margin-top: 40px;
+
+				}
+				.loader
+				{
+					position: absolute;
+					left: 50%;
+					top: 50%;
+					z-index: 1;
+					width: 150px;
+					height: 150px;
+					margin: -75px 0 0 -75px;
+					border: 16px solid #f3f3f3;
+					border-radius: 50%;
+					border-top: 16px solid #3498db;
+					width: 120px;
+					height: 120px;
+					-webkit-animation: spin 2s linear infinite;
+					animation: spin 2s linear infinite;
+
+				}
+
+				@keyframes spin 
+				{
+					0% { transform: rotate(0deg); }
+					100% { transform: rotate(360deg); }
 				}
 			</style>
 	</head>
 
 	<body>
-
 	<script src= "js/three.min.js"></script>
 	<script src= "js/three/controls/OrbitControls.js"></script>
 	<script src="js/three/loaders/DDSLoader.js"></script>
@@ -59,6 +73,15 @@
 		var sidebarStyle = sideBar.style;
 		document.body.appendChild(container);
 
+		
+		/*Loader*/
+		var loader = document.createElement('div');
+		loader.className="loader";
+		loader.style.display="none";
+		document.body.appendChild(loader);
+		
+		var imageLoader = document.createElement('div');
+		imageLoader.className="loader";
 
 
 		controls.enablePan = false;
@@ -76,9 +99,11 @@
 		sidebarStyle.backgroundColor = "blue";
 		sidebarStyle.display = "none";
 		sideBar.id = "sidebar";
-		
+		sideBar.appendChild(imageLoader);
+
 		var childDetails = document.createElement('div');
 		childDetails.id ="childDetails";
+		childDetails.style.display = "none";
 		var childImage = document.createElement('img');
 
 		childImage.style.display="block";
@@ -131,7 +156,8 @@
 			dbParam = JSON.stringify(obj);
 			
 			xmlhttp = new XMLHttpRequest();
-
+			imageLoader.style.display="block";
+			childDetails.style.display="none";
 
 			xmlhttp.onreadystatechange = function() 
 			{
@@ -144,14 +170,18 @@
 						childPseudo.innerHTML = myObj[0].Pseudo;
 						childCitation.innerHTML =  myObj[0].Slogan;
 						childImage.src = "images/DB/Lot2/400-500/"+myObj[0].NomFichier+".jpg";
-		
+
 					}
+					childDetails.style.display="block";
+					imageLoader.style.display="none";
+					sidebarStyle.display = "block";
+
 				}
 			}
 			xmlhttp.open("POST", "selectImage.php", true);
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xmlhttp.send("x=" + dbParam);    
-			sidebarStyle.display = "block";
+			xmlhttp.send("x=" + dbParam);   
+ 
 		}
 
 		function onWindowResize()
@@ -229,11 +259,9 @@
 			}
 			renderer.render( scene, camera );
 		}
-		var t ="";
-		loadData(scene,data,t);
+		loadData(scene,container,loader);
 		animate();
 
-		console.log(t);
 	</script>
 	</body>
 </html>
