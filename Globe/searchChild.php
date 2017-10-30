@@ -8,7 +8,7 @@
 
     $obj = json_decode($_POST["x"], false);
     $connexion = getBD();
-    $reponse = 'SELECT Pseudo,IDImage,NomFichier  FROM images WHERE Pseudo LIKE "%'.$obj->Pseudo.'%"';
+    $reponse = 'SELECT Pseudo,IDPlace,IDImage,ImageOK  FROM images WHERE Pseudo LIKE "%'.$obj->Pseudo.'%"';
     $resultats = $connexion->query($reponse);
 
     $output = array();

@@ -4,61 +4,95 @@
 		<title>Globoscope</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
 		<style>
-				body 
-				{ 
-					background-color: #f0f0f0;
-					margin: 0px;
-					overflow: hidden;
-				}
-				#childDetails
-				{
-					display:block;
-				}
-				#childImage
-				{
-					display:block;
+		body 
+		{ 
+			background-color: #f0f0f0;
+			margin: 0px;
+			overflow: hidden;
+		}
+		#childDetails
+		{
+			display:block;
+			margin-top: 100px;
+		}
+		#separatorStyle
+		{
+			color: red;
+			height: 5px;
+			width: 900PX;
+			display: block;
+			margin-bottom: 50px;
+			z-index: 1;
+		}
 
-				}
-				.loader
-				{
-					position: absolute;
-					left: 50%;
-					top: 50%;
-					z-index: 1;
-					width: 150px;
-					height: 150px;
-					margin: -75px 0 0 -75px;
-					border: 16px solid #f3f3f3;
-					border-radius: 50%;
-					border-top: 16px solid #3498db;
-					width: 120px;
-					height: 120px;
-					-webkit-animation: spin 2s linear infinite;
-					animation: spin 2s linear infinite;
-
-				}
-
-				#SearchBar
-				{
-					position:absolute;
-					z-index:1;
-					height:40px;
-					width:100%;
-					top:5px;
-				}
-				#SearchBar form input
-				{
-					width:100%;
-				}
-				@keyframes spin 
-				{
-					0% { transform: rotate(0deg); }
-					100% { transform: rotate(360deg); }
-				}
-
-			</style>
+		#childImage
+		{
+			display:block;
+			border-radius: 15px;
+		}
+		#searchResultStyle{
+			margin: auto;
+			margin-top:75px;
+			width: 500px;
+			height: 600px;
+			overflow-y: auto;
+		}
+		@font-face{
+			font-family: "CurvedFont";
+			src: url("Font/Poppins-Regular.ttf");
+		}
+		.loader
+		{
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: 1;
+			width: 150px;
+			height: 150px;
+			margin: -75px 0 0 -75px;
+			border: 16px solid #f3f3f3;
+			border-radius: 50%;
+			border-top: 16px solid #3498db;
+			width: 120px;
+			height: 120px;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+		
+		#sidebar
+		{
+			font-family: "CurvedFont";
+			width: 900px;
+			color: black;
+				
+		}
+		#SearchBar
+		{
+			position:absolute;
+			z-index:1;
+			height:40px;
+			width:100%;
+			top:5px;
+		}
+		#SearchBar form input
+		{
+			width:100%;
+		}
+		@keyframes spin 
+		{
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+		.closeButton{
+			position: absolute;
+			margin-right: 30px;
+			font-size: 1.7em;
+			top:0px;
+			right: 0px;
+			color:#bcdc53;
+		}
+		</style>
 	</head>
 
 	<body>
@@ -138,7 +172,9 @@
 		sidebarStyle.position = "absolute";
 		sidebarStyle.right = "0px";
 		sidebarStyle.top = 150+"px";
-		sidebarStyle.backgroundColor = "blue";
+		sidebarStyle.borderLeft = '16px solid #bcdc53';
+		sidebarStyle.borderRadius = "25px";	
+		sidebarStyle.backgroundColor = '#f0f0f2';	
 		sidebarStyle.display = "none";
 		sideBar.id = "sidebar";
 		sideBar.appendChild(imageLoader);
@@ -155,6 +191,7 @@
 		childImage.style.marginTop = "40px";
 		childImage.id = "childImage";
 		childImage.src = "images/DB/Lot2/400-500/3-37-3.jpg";
+		childImage.onload = showImage;
 		childDetails.appendChild(childImage);
 
 		var childPseudo = document.createElement('p');
@@ -169,11 +206,11 @@
 
 		sideBar.appendChild(childDetails);
 		
-		var closeButton = document.createElement('button');
+		var closeButton = document.createElement('p');
 		closeButton.style.position = "absolute";
 		closeButton.style.bottom = "0px";
-		closeButton.innerHTML ="close";
-		closeButton.className="w3-button w3-black w3-block w3-teal";
+		closeButton.innerHTML ="X";
+		closeButton.className="closeButton";
 		closeButton.onclick = closeSideBar;
 		sideBar.appendChild(closeButton);
 		
@@ -181,6 +218,7 @@
 		camera.position.z = 10000;
 		
 		
+
 		document.onmousedown = onMouseClick;
 		document.onmousemove = onMouseMove;
 
@@ -205,40 +243,55 @@
 			dbParam = JSON.stringify(objJSON);
 
 			xmlhttp = new XMLHttpRequest();
+
+
+			showSideBar();
+
 			xmlhttp.onreadystatechange = function()
 			{
 				if(this.readyState ==4 && this.status==200)
 				{
 
 					///Afficher un tableau avec tout les résultats
-					//for(myObj)
-					//creer un bouton
-					myObj = JSON.parse(this.responseText);
 
-					//pour partir d'une div vide
-					childDetails.innerHTML = "";
-					//tableau de résultat de la recherche/requete SQL
-					//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
-					for(var i = 0; i < myObj.length; i++)
-					(function(i)
+
+					if(this.responseText != "")
 					{
-						if(myObj[i].IDImage != 0)
-						{			
-							var a = document.createElement("a");
-							a.setAttribute("href","#");
-							
-							var img = document.createElement("img");
-							var data = myObj[i].IDImage;
-							img.id= myObj[i].IDImage;
-							img.src = "images/DB/Lot2/100-125/"+myObj[i].NomFichier+".jpg";
-							img.onclick = function(){onImageClick(myObj[i].IDImage);}
-							childDetails.appendChild(img);
-						}
-					})(i);
+						myObj = JSON.parse(this.responseText);
 
-					childDetails.style.display="block";
-					imageLoader.style.display="none";
-					sidebarStyle.display = "block";
+						//pour partir d'une div vide
+						childDetails.innerHTML = "";
+						//tableau de résultat de la recherche/requete SQL
+						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
+						var total = myObj.length;
+						for(var i = 0; i < myObj.length; i++)
+						(function(i)
+						{
+							if(myObj[i].ImageOK != 0)
+							{			
+								var img = document.createElement("img");
+								img.width= 100;
+								img.height = 128;
+								img.src = "images/DB/Lot2/400-500/"+myObj[i].IDImage+".jpg";
+								img.onclick = function(){onImageClick(myObj[i].IDPlace);}
+								img.onload = function()
+								{
+									total--;
+									if(total == 1)
+									{
+										showImage();
+									}
+									console.log(total);
+
+								}
+								childDetails.appendChild(img);						
+							}
+						})(i);
+					}
+					else
+					{
+						alert("Aucun resultat");
+					}					
 				}
 			}
 
@@ -252,31 +305,29 @@
 			var obj, dbParam, xmlhttp, myObj;
 			obj = { "ID":x };
 			dbParam = JSON.stringify(obj);
-			
 			xmlhttp = new XMLHttpRequest();
-			imageLoader.style.display="block";
-			childDetails.style.display="none";
-			childDetails.innerHTML = "";
+			sidebarStyle.display = "block";
+			console.log(x);
+
+			showSideBar();
+
 			xmlhttp.onreadystatechange = function() 
 			{
 				if (this.readyState == 4 && this.status == 200) 
 				{
-					myObj = JSON.parse(this.responseText);
-
-					if(myObj[0].IDImage != 0)
-					{	
-						childPseudo.innerHTML = myObj[0].Pseudo;
-						childCitation.innerHTML =  myObj[0].Slogan;
-						childImage.src = "images/DB/Lot2/400-500/"+myObj[0].NomFichier+".jpg";
-						childDetails.appendChild(childImage);
-						childDetails.appendChild(childPseudo);
-						childDetails.appendChild(childCitation);
-
+					if(this.responseText != "")
+					{
+						myObj = JSON.parse(this.responseText);
+						if(myObj[0].ImageOK != 0)
+						{
+							childPseudo.innerHTML = myObj[0].Pseudo;
+							childCitation.innerHTML =  myObj[0].Slogan;
+							childImage.src = "images/DB/Lot2/400-500/"+myObj[0].IDImage+".jpg";
+							childDetails.appendChild(childImage);
+							childDetails.appendChild(childPseudo);
+							childDetails.appendChild(childCitation);
+						}
 					}
-					childDetails.style.display="block";
-					imageLoader.style.display="none";
-					sidebarStyle.display = "block";
-
 				}
 			}
 			xmlhttp.open("POST", "selectImage.php", true);
@@ -285,6 +336,23 @@
  
 		}
 
+		function hideSideBar()
+		{
+			sidebarStyle.display = "none";
+		}
+		function showSideBar()
+		{
+			imageLoader.style.display="block";
+			childDetails.style.display="none";
+			childDetails.innerHTML = "";
+			sidebarStyle.display = "block";
+
+		}
+		function showImage()
+		{
+			childDetails.style.display="block";
+			imageLoader.style.display="none";
+		}
 		function onWindowResize()
 		{
 			rendererW = window.innerWidth;
@@ -321,11 +389,11 @@
 					// calculate objects intersecting the picking ray
 					var intersects = raycaster.intersectObjects( scene.children );
 				
-
 					if(intersects.length > 0)
 					{
-						if(intersects[0].object.name != 0)
+						if(intersects[0].object.name != 0 && intersects[0].object.type =="VRAI")
 						{
+							console.log(intersects[0].object);
 							onImageClick(intersects[ 0 ].object.name);
 						}
 					}

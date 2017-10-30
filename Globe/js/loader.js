@@ -63,26 +63,41 @@ function loadData(scene,canvContainer,loadSpinner)
             var currentMeridian = 0;
 
             var rayon =  (cellW*originalSpacing*meridianWidth*totalMeridians)/(2*Math.PI);
-
-
+            
+            var i = 0;
+            var imageLoaded = 0;
+            for(i in data)
+            {
+                if(data[i].ImageOK == "VRAI")
+                    imageLoaded++;
+            }
             for (x in data) 
             {      
 
                 //charger une image 
-                if(data[x].IDImage != 0)
+                if(data[x].ImageOK != 0)
                 {
-                    file ="images/DB/Lot2/100-125/"+data[x].NomFichier+".jpg";
-                    texture =  textureLoader.load( file );                          
+                    var image = new Image();
+
+                    image.onload = function()
+                    {
+                        imageLoaded--;
+                        if(imageLoaded <= 0)
+                        {
+                            showCanvas(canvContainer,loadSpinner);                                
+                        }
+                    }
+                    file ="images/DB/Lot2/400-500/"+data[x].IDImage+".jpg";
+                    
+                    image.src = file;
+                    texture =  textureLoader.load( file );
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );                
                 }
                 else
                 {                      
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff } );
                     mesh = new THREE.Mesh( plane, material );        
-                }
-
-
-  
+                }  
                  //Gesition de l'espacement en fonction de la latitude 
                 /*if(data[x].lat == 4 ||data[x].lat == 5 ||data[x].lat == 6 ||data[x].lat == 7  )
                 {
@@ -145,19 +160,17 @@ function loadData(scene,canvContainer,loadSpinner)
                 _z = rayon* (Math.cos(lat)  * Math.sin(long));
 
                 //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
-                mesh.name = data[x].IDImage;
+                mesh.name = data[x].IDPlace;
+                mesh.type = data[x].ImageOK;
                 mesh.position.set(_x ,_y,_z);
 
                 //orienter les planes vers le centre du cercle
                 orientation.subVectors(mesh.position, zero).add(mesh.position);
                 mesh.lookAt(orientation);
 
-                scene.add( mesh );          
+                scene.add( mesh );   
             }
-     
-            //cacher lelement de chargement et afficher le canvas
-            canvContainer.style.display = "block";
-            loadSpinner.style.display = "none";
+            
         }
     };
 
@@ -165,5 +178,10 @@ function loadData(scene,canvContainer,loadSpinner)
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send("x=" + dbParam);    
 
+}
+function showCanvas(canvContainer,loadSpinner)
+{
+    canvContainer.style.display = "block";
+    loadSpinner.style.display = "none";
 }
 

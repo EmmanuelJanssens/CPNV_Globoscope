@@ -8,7 +8,7 @@
 
     $obj = json_decode($_POST["x"], false);
     $connexion = getBD();
-    $reponse = "SELECT NomFichier,Pseudo,Slogan FROM images WHERE IDImage = ".$obj->ID;
+    $reponse = "SELECT IDPlace,IDImage,Pseudo,Slogan,ImageOK FROM images WHERE IDPlace = ".$obj->ID;
     $resultats = $connexion->query($reponse);
 
     $output = array();
