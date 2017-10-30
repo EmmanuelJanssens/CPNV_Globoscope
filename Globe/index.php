@@ -15,12 +15,35 @@
 				#childDetails
 				{
 					display:block;
+                    margin-top: 100px;
 				}
+            #separatorStyle
+            {
+                color: red;
+                height: 5px;
+                width: 900PX;
+                display: block;
+                margin-bottom: 50px;
+                z-index: 1;
+            }
+        
 				#childImage
 				{
 					display:block;
+                    border-radius: 15px;
 
 				}
+            #searchResultStyle{
+                margin: auto;
+                margin-top:75px;
+                width: 500px;
+                height: 600px;
+                overflow-y: auto;
+            }
+            @font-face{
+                font-family: "CurvedFont";
+                src: url("Font/Poppins-Regular.ttf");
+            }
 				.loader
 				{
 					position: absolute;
@@ -39,7 +62,14 @@
 					animation: spin 2s linear infinite;
 
 				}
-
+                
+                #sidebar
+                {
+                    font-family: "CurvedFont";
+                    width: 900px;
+                    color: black;
+                      
+                }
 				#SearchBar
 				{
 					position:absolute;
@@ -57,7 +87,14 @@
 					0% { transform: rotate(0deg); }
 					100% { transform: rotate(360deg); }
 				}
-
+            .closeButton{
+                position: absolute;
+                margin-right: 30px;
+                font-size: 1.7em;
+                top:0px;
+                right: 0px;
+                color:#bcdc53;
+            }
 			</style>
 	</head>
 
@@ -80,7 +117,7 @@
 		var raycaster = new THREE.Raycaster();
 		var mouse = new THREE.Vector2();
 		var data = [];
-
+        
 		var container = document.createElement('div');
 		container.id = "CanvContainer";
 		var sideBar = document.createElement('div');
@@ -89,6 +126,9 @@
 		var sidebarStyle = sideBar.style;
 		document.body.appendChild(container);
 		
+        var separator = document.createElement('div');
+        separator.id = "separatorStyle";
+        
 		var SearchBar = document.createElement('div');
 		SearchBar.id="SearchBar";
 
@@ -138,7 +178,9 @@
 		sidebarStyle.position = "absolute";
 		sidebarStyle.right = "0px";
 		sidebarStyle.top = 150+"px";
-		sidebarStyle.backgroundColor = "blue";
+        sidebarStyle.borderLeft = '16px solid #bcdc53';
+        sidebarStyle.borderRadius = "25px";
+		sidebarStyle.backgroundColor = '#f0f0f2';
 		sidebarStyle.display = "none";
 		sideBar.id = "sidebar";
 		sideBar.appendChild(imageLoader);
@@ -169,11 +211,14 @@
 
 		sideBar.appendChild(childDetails);
 		
-		var closeButton = document.createElement('button');
+        var searchResult = document.createElement('div');
+        searchResult.id = "searchResultStyle";
+        
+		var closeButton = document.createElement('p');
 		closeButton.style.position = "absolute";
 		closeButton.style.bottom = "0px";
-		closeButton.innerHTML ="close";
-		closeButton.className="w3-button w3-black w3-block w3-teal";
+		closeButton.innerHTML ="X";
+		closeButton.className="closeButton";
 		closeButton.onclick = closeSideBar;
 		sideBar.appendChild(closeButton);
 		
@@ -232,7 +277,10 @@
 							img.id= myObj[i].IDImage;
 							img.src = "images/DB/Lot2/100-125/"+myObj[i].NomFichier+".jpg";
 							img.onclick = function(){onImageClick(myObj[i].IDImage);}
+                            childDetails.style.overflowY = "auto";
 							childDetails.appendChild(img);
+                            searchResult.appendChild(childDetails);
+                            sideBar.appendChild(searchResult);
 						}
 					})(i);
 
@@ -257,6 +305,7 @@
 			imageLoader.style.display="block";
 			childDetails.style.display="none";
 			childDetails.innerHTML = "";
+            
 			xmlhttp.onreadystatechange = function() 
 			{
 				if (this.readyState == 4 && this.status == 200) 
@@ -269,6 +318,7 @@
 						childCitation.innerHTML =  myObj[0].Slogan;
 						childImage.src = "images/DB/Lot2/400-500/"+myObj[0].NomFichier+".jpg";
 						childDetails.appendChild(childImage);
+                        childDetails.appendChild(separator);
 						childDetails.appendChild(childPseudo);
 						childDetails.appendChild(childCitation);
 
