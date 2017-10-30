@@ -40,6 +40,13 @@
                 height: 600px;
                 overflow-y: auto;
             }
+            
+            #searchDiv{
+                width:140px;
+                height: 167.5px;
+                overflow-y: hidden;
+            }
+            
             @font-face{
                 font-family: "CurvedFont";
                 src: url("Font/Poppins-Regular.ttf");
@@ -272,13 +279,24 @@
 							var a = document.createElement("a");
 							a.setAttribute("href","#");
 							
+                            var div = document.createElement("div");
+                            div.id = "searchDiv";
 							var img = document.createElement("img");
-							var data = myObj[i].IDImage;
-							img.id= myObj[i].IDImage;
+                            
+                            var searchPseudo = document.createElement("p");
+                            
+                            
+                            img.id= myObj[i].IDImage;
 							img.src = "images/DB/Lot2/100-125/"+myObj[i].NomFichier+".jpg";
 							img.onclick = function(){onImageClick(myObj[i].IDImage);}
+                            searchPseudo.innerHTML = myObj[i].Pseudo;
+
+                            div.appendChild(img);
+                            div.appendChild(searchPseudo);
+                            
                             childDetails.style.overflowY = "auto";
-							childDetails.appendChild(img);
+							childDetails.appendChild(div);
+                            //ajout
                             searchResult.appendChild(childDetails);
                             sideBar.appendChild(searchResult);
 						}
@@ -319,7 +337,9 @@
 						childImage.src = "images/DB/Lot2/400-500/"+myObj[0].NomFichier+".jpg";
 						childDetails.appendChild(childImage);
                         childDetails.appendChild(separator);
-						childDetails.appendChild(childPseudo);
+					
+
+                        childDetails.appendChild(childPseudo);
 						childDetails.appendChild(childCitation);
 
 					}
