@@ -26,6 +26,7 @@
 				<p id="childCitation"></p>
 		</div>
 	</div>
+	
 	<div id="searchBar">
 		<div>
 			<input type="text" id="searchText">                                        

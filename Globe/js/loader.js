@@ -49,7 +49,7 @@ function loadData(scene,canvContainer,loadSpinner)
             var cellW = 128;
             var cellH = 128;
 
-            var originalSpacing =1.5;    
+            var originalSpacing =1.1;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
             var totalWidth = collNum.length * originalSpacing;
@@ -71,6 +71,16 @@ function loadData(scene,canvContainer,loadSpinner)
                 if(data[i].ImageOK == "VRAI")
                     imageLoaded++;
             }
+
+            var loader = new THREE.TextureLoader();
+            loader.load( 'images/earth.jpg', function ( texture ) {
+                var geometry = new THREE.SphereGeometry( rayon - 10, 20, 20 );
+                var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+                var mesh = new THREE.Mesh( geometry, material );
+                mesh.rotation.y = Math.PI / 1.4;
+                scene.add( mesh );
+            } );
+
             for(x = 0; x < data.length;x++)
             {      
                 //charger une image 
