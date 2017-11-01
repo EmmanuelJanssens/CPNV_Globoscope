@@ -49,7 +49,7 @@ function loadData(scene,canvContainer,loadSpinner)
             var cellW = 128;
             var cellH = 128;
 
-            var originalSpacing =2;    
+            var originalSpacing =1.5;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
             var totalWidth = collNum.length * originalSpacing;
@@ -71,9 +71,8 @@ function loadData(scene,canvContainer,loadSpinner)
                 if(data[i].ImageOK == "VRAI")
                     imageLoaded++;
             }
-            for (x in data) 
+            for(x = 0; x < data.length;x++)
             {      
-
                 //charger une image 
                 if(data[x].ImageOK != 0)
                 {
@@ -87,7 +86,7 @@ function loadData(scene,canvContainer,loadSpinner)
                             showCanvas(canvContainer,loadSpinner);                                
                         }
                     }
-                    file ="images/DB/Lot2/400-500/"+data[x].IDImage+".jpg";
+                    file ="images/DB/128-128/"+data[x].IDImage+".jpg";
                     
                     image.src = file;
                     texture =  textureLoader.load( file );
@@ -101,51 +100,48 @@ function loadData(scene,canvContainer,loadSpinner)
                  //Gesition de l'espacement en fonction de la latitude 
                 /*if(data[x].lat == 4 ||data[x].lat == 5 ||data[x].lat == 6 ||data[x].lat == 7  )
                 {
-                    xSpacing = totalWidth/2;
-                    
+                    ySpacing = originalSpacing;                    
                 }
                 else if(data[x].lat == 8 ||data[x].lat == 9 ||data[x].lat == 10)
                 {
-                    xSpacing = totalWidth/4;
-                    
-                    
+                    ySpacing = originalSpacing;                    
                 }     
                 else if(data[x].lat == 11 ||data[x].lat == 12 ||data[x].lat == 13||data[x].lat ==14)
-                {
-                    xSpacing = totalWidth/6;
-                    
+                {                  
+                    ySpacing = originalSpacing;                    
                 }      
                 else if(data[x].lat == 15 ||data[x].lat == 16 ||data[x].lat == 17||data[x].lat ==18)
                 {
-                    xSpacing = totalWidth/8;                    
+                    ySpacing = originalSpacing;                    
                 }    
                 else if(data[x].lat == 19 ||data[x].lat == 20 ||data[x].lat == 21||data[x].lat ==22||data[x].lat ==23||data[x].lat ==24 )
                 {
-                    xSpacing = totalWidth/10;           
+                    ySpacing = originalSpacing;                    
                 }
                 else if(data[x].lat == 37||data[x].lat == 38||data[x].lat == 39||data[x].lat == 40||data[x].lat == 41||data[x].lat == 42 )
                 {
-                    xSpacing = totalWidth/10;           
+                    ySpacing = originalSpacing;                    
                 }          
                 else if(data[x].lat == 43||data[x].lat == 44||data[x].lat == 45||data[x].lat == 46)   
                 {
-                    xSpacing = totalWidth/8;                               
+                    ySpacing = originalSpacing;                    
                 }
                 else if(data[x].lat == 47||data[x].lat == 48||data[x].lat == 49||data[x].lat == 50)   
                 {
-                    xSpacing = totalWidth/6;                               
+                    ySpacing = originalSpacing;                    
                 }
                 else if(data[x].lat == 51||data[x].lat == 52||data[x].lat == 53)   
                 {
-                    xSpacing = totalWidth/4;                               
+                    ySpacing = originalSpacing;
+                    
                 }
                 else if(data[x].lat == 54||data[x].lat == 55||data[x].lat == 56||data[x].lat == 57)   
                 {
-                    xSpacing = totalWidth/2;                               
+                    ySpacing = .1;
                 }
                 else
                 {
-                    xSpacing = originalSpacing;               
+                    ySpacing = originalSpacing;
                 }*/
 
                 //creer le plane 
@@ -153,10 +149,10 @@ function loadData(scene,canvContainer,loadSpinner)
                 
                 //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
                 long = ( data[x].mer * cellW * meridianWidth * originalSpacing + (data[x].lon ) * cellW * (xSpacing))/rayon;
-                lat = 2*Math.atan(Math.exp( (-(  cellH * meridianHeight * originalSpacing)/2+(data[x].lat) *cellH *ySpacing )/rayon)) - Math.PI/2;
+                lat = 2*Math.atan(Math.exp( (-(  cellH * meridianHeight * ySpacing)/2+ (data[x].lat) *cellH *originalSpacing ) /rayon)) - Math.PI/2;
 
-                _x = rayon* (Math.cos(lat) * Math.cos(long)) ;
-                _y = rayon* (Math.sin(lat));
+                _x = rayon* (Math.cos(lat) * Math.cos(long)) ;;
+                _y = rayon* (Math.sin(lat)) ;
                 _z = rayon* (Math.cos(lat)  * Math.sin(long));
 
                 //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image

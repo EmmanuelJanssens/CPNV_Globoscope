@@ -4,107 +4,45 @@
 		<title>Globoscope</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-		body 
-		{ 
-			background-color: #f0f0f0;
-			margin: 0px;
-			overflow: hidden;
-		}
-		#childDetails
-		{
-			display:block;
-			margin-top: 100px;
-		}
-		#separatorStyle
-		{
-			color: red;
-			height: 5px;
-			width: 900PX;
-			display: block;
-			margin-bottom: 50px;
-			z-index: 1;
-		}
+		<meta http-equiv="Cache-control" content="no-cache">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="css/style.css"> 	
+		<link rel="stylesheet" href="css/sideBarStyle.css"> 	
+		<link rel="stylesheet" href="css/searchBar.css"> 	
 
-		#childImage
-		{
-			display:block;
-			border-radius: 15px;
-		}
-		#searchResultStyle{
-			margin: auto;
-			margin-top:75px;
-			width: 500px;
-			height: 600px;
-			overflow-y: auto;
-		}
-		@font-face{
-			font-family: "CurvedFont";
-			src: url("Font/Poppins-Regular.ttf");
-		}
-		.loader
-		{
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			z-index: 1;
-			width: 150px;
-			height: 150px;
-			margin: -75px 0 0 -75px;
-			border: 16px solid #f3f3f3;
-			border-radius: 50%;
-			border-top: 16px solid #3498db;
-			width: 120px;
-			height: 120px;
-			-webkit-animation: spin 2s linear infinite;
-			animation: spin 2s linear infinite;
-		}
 		
-		#sidebar
-		{
-			font-family: "CurvedFont";
-			width: 900px;
-			color: black;
-				
-		}
-		#SearchBar
-		{
-			position:absolute;
-			z-index:1;
-			height:40px;
-			width:100%;
-			top:5px;
-		}
-		#SearchBar form input
-		{
-			width:100%;
-		}
-		@keyframes spin 
-		{
-			0% { transform: rotate(0deg); }
-			100% { transform: rotate(360deg); }
-		}
-		.closeButton{
-			position: absolute;
-			margin-right: 30px;
-			font-size: 1.7em;
-			top:0px;
-			right: 0px;
-			color:#bcdc53;
-		}
-		</style>
 	</head>
 
 	<body>
+
+
+	<div id="sideBar">
+		<p id="closeSideBar">X</p>
+		<div class ="loader" id="imageLoader"></div>
+		<div id="onClickDetails">
+				<img id="childImage">
+				<hr id="separator">
+				<p id="childPseudo"></p>
+				<p id="childCitation"></p>
+		</div>
+	</div>
+	<div id="searchBar">
+		<div>
+			<input type="text" id="searchText">                                        
+			<span id="searchButton">Recherche</span>
+		</div>
+		<img src="images/searchIcon.png">
+	</div>
+
 	<script src= "js/three.min.js"></script>
 	<script src= "js/three/controls/OrbitControls.js"></script>
 	<script src="js/three/loaders/DDSLoader.js"></script>
-	<script src ="js/loader.js">
-	</script>
-
+	<script src ="js/loader.js"></script>
+	<script src="js/searchChild.js"></script>
+	<script src="js/childClicked.js"></script>
 	<script>
 
-		//Initialisation
+		/**Initialisation THREE JS */
 		var scene = new THREE.Scene();
 		var rendererW = window.innerWidth;
 		var rendererH = window.innerHeight;
@@ -115,244 +53,122 @@
 		var mouse = new THREE.Vector2();
 		var data = [];
 
+		/*désactiver le déplacement pour le globe*/
+		controls.enablePan = false;
+		controls.enableDamping = true;
+					
+		/*Conteneur des détails de l'image recherchée //Onclick */
+		camera.position.z = 7000;
+
+		/*Ajouer les élément principaux*/
+		renderer.setSize( rendererW,rendererH);
+
+		/**Fin initialisation three JS */
 		var container = document.createElement('div');
 		container.id = "CanvContainer";
-		var sideBar = document.createElement('div');
-		var sidebarW = 600;
-		var sidebarH = rendererH - 200;
-		var sidebarStyle = sideBar.style;
-		document.body.appendChild(container);
-		
-		var SearchBar = document.createElement('div');
-		SearchBar.id="SearchBar";
 
-		var SearchBarForm = document.createElement('form');
-		SearchBarForm.method="post";
-		SearchBarForm.action="index.php";
+		/**Tout les composant concernant la barre de recherche */
+		var SearchIcon = document.createElement('img');
+		SearchIcon.src = "images/searchIcon.png";
+		SearchIcon.onclick  = showSearchBar;
+		var SearchBar = document.createElement('div');
+		SearchBar.id="searchBar";
 
 		var SearchTextBox = document.createElement('input');
+		SearchTextBox.id ="searchTextBox";
 		SearchTextBox.type="text";
 		SearchTextBox.name="searchChild";
 
-		var SearchButton = document.createElement('input');
-		SearchButton.type="submit";
-		SearchButton.name="searchButton";
+		var SearchButton = document.createElement('div');
+		SearchButton.id ="searchButton";
 		SearchButton.value="Search";
 		SearchButton.onclick = searchChild;
 
+
+		SearchButton.style.display = 'none';
+		SearchTextBox.style.display = 'none';
+
+		SearchBar.appendChild(SearchIcon);
 		SearchBar.appendChild(SearchButton);
 		SearchBar.appendChild(SearchTextBox);
+		/**fin de la barre de recherche */
 
-
-		container.appendChild(SearchBar);
+		/**tout les composant concernant le sidebar */
+		var sideBar = document.getElementById('sideBar');
+		var closeSideBar = document.getElementById('closeSideBar');
+		var onClickDetails = document.getElementById('onClickDetails');
+		var childImage =document.getElementById("childImage");
+		var childPseudo = document.getElementById("childPseudo");
+		var childCitation = document.getElementById("childCitation");
 		
+
+		childImage.onload = showOnClickDetails;
+		closeSideBar.onclick = hideSideBar;
+		sideBar.style.display='none';
+		
+		/*Loader pour l'image*/
+		var imageLoader =  document.getElementById("imageLoader");
+		imageLoader.className="loader";
+		/**Fin des composant de la side Bar */
+
+
 		/*Loader*/
 		var loader = document.createElement('div');
 		loader.className="loader";
 		loader.style.display="none";
 		document.body.appendChild(loader);
-		
-		/*Loader pour l'image*/
-		var imageLoader = document.createElement('div');
-		imageLoader.className="loader";
-
-		/*désactiver le déplacement pour le globe*/
-		controls.enablePan = false;
-		controls.enableDamping = true;
-		
-		/*Ajouer les élément principaux*/
-		renderer.setSize( rendererW,rendererH);
-		container.appendChild(renderer.domElement);
-
-		container.appendChild(sideBar);
-			
-		/*Conteneur des détails de l'image recherchée //Onclick */
-		sidebarStyle.width = sidebarW+"px";
-		sidebarStyle.height = sidebarH+"px";
-		sidebarStyle.position = "absolute";
-		sidebarStyle.right = "0px";
-		sidebarStyle.top = 150+"px";
-		sidebarStyle.borderLeft = '16px solid #bcdc53';
-		sidebarStyle.borderRadius = "25px";	
-		sidebarStyle.backgroundColor = '#f0f0f2';	
-		sidebarStyle.display = "none";
-		sideBar.id = "sidebar";
-		sideBar.appendChild(imageLoader);
-		
-
-		var childDetails = document.createElement('div');
-		childDetails.id ="childDetails";
-		childDetails.style.display = "none";
-		var childImage = document.createElement('img');
-
-		childImage.style.display="block";
-		childImage.style.marginLeft="auto";
-		childImage.style.marginRight = "auto";
-		childImage.style.marginTop = "40px";
-		childImage.id = "childImage";
-		childImage.src = "images/DB/Lot2/400-500/3-37-3.jpg";
-		childImage.onload = showImage;
-		childDetails.appendChild(childImage);
-
-		var childPseudo = document.createElement('p');
-		childPseudo.id = "childPseudo";
-		childPseudo.style.textAlign = "center";
-		childDetails.appendChild(childPseudo);
-
-		var childCitation = document.createElement('p');
-		childCitation.id = "childCitation";
-		childCitation.style.textAlign = "center";
-		childDetails.appendChild(childCitation);
-
-		sideBar.appendChild(childDetails);
-		
-		var closeButton = document.createElement('p');
-		closeButton.style.position = "absolute";
-		closeButton.style.bottom = "0px";
-		closeButton.innerHTML ="X";
-		closeButton.className="closeButton";
-		closeButton.onclick = closeSideBar;
-		sideBar.appendChild(closeButton);
-		
-
-		camera.position.z = 10000;
-		
-		
+	
+		window.addEventListener('resize',onWindowResize,false);
 
 		document.onmousedown = onMouseClick;
 		document.onmousemove = onMouseMove;
+		document.body.appendChild(container);
 
-		//document.addEventListener( 'mousedown', onMouseClick, false );
-		//document.addEventListener( 'mousemove', onMouseMove, false );
-		
-		window.addEventListener('resize',onWindowResize,false);
-		
-		function closeSideBar()
+		container.appendChild(SearchBar);
+		container.appendChild(renderer.domElement);
+
+		function showOnClickDetails ()
 		{
-			//Efface le contenu précédent du div -> childDetails
-			childDetails.innerHTML = "";
-			sidebarStyle.display = "none";
-		}
-
-		function searchChild()
-		{
-			var objJSON,dbParam,xmlhttp,myObj;
-
-			//les paramètres a passer dans la requête SQL
-			objJSON = {"Pseudo":SearchTextBox.value }
-			dbParam = JSON.stringify(objJSON);
-
-			xmlhttp = new XMLHttpRequest();
-
-
-			showSideBar();
-
-			xmlhttp.onreadystatechange = function()
+			imageLoader.style.display = 'none';
+			var nodes = onClickDetails.childNodes;
+			var i= 0;
+			for (i = 0; i < nodes.length;i++)
 			{
-				if(this.readyState ==4 && this.status==200)
-				{
-
-					///Afficher un tableau avec tout les résultats
-
-
-					if(this.responseText != "")
-					{
-						myObj = JSON.parse(this.responseText);
-
-						//pour partir d'une div vide
-						childDetails.innerHTML = "";
-						//tableau de résultat de la recherche/requete SQL
-						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
-						var total = myObj.length;
-						for(var i = 0; i < myObj.length; i++)
-						(function(i)
-						{
-							if(myObj[i].ImageOK != 0)
-							{			
-								var img = document.createElement("img");
-								img.width= 100;
-								img.height = 128;
-								img.src = "images/DB/Lot2/400-500/"+myObj[i].IDImage+".jpg";
-								img.onclick = function(){onImageClick(myObj[i].IDPlace);}
-								img.onload = function()
-								{
-									total--;
-									if(total == 1)
-									{
-										showImage();
-									}
-									console.log(total);
-
-								}
-								childDetails.appendChild(img);						
-							}
-						})(i);
-					}
-					else
-					{
-						alert("Aucun resultat");
-					}					
-				}
+				if(nodes[i].style != null)
+					nodes[i].style.display = "block";
 			}
-
-			xmlhttp.open("POST", "searchChild.php", true);
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xmlhttp.send("x=" + dbParam);   	
 		}
-
-		function onImageClick(x)
-		{
-			var obj, dbParam, xmlhttp, myObj;
-			obj = { "ID":x };
-			dbParam = JSON.stringify(obj);
-			xmlhttp = new XMLHttpRequest();
-			sidebarStyle.display = "block";
-			console.log(x);
-
-			showSideBar();
-
-			xmlhttp.onreadystatechange = function() 
-			{
-				if (this.readyState == 4 && this.status == 200) 
-				{
-					if(this.responseText != "")
-					{
-						myObj = JSON.parse(this.responseText);
-						if(myObj[0].ImageOK != 0)
-						{
-							childPseudo.innerHTML = myObj[0].Pseudo;
-							childCitation.innerHTML =  myObj[0].Slogan;
-							childImage.src = "images/DB/Lot2/400-500/"+myObj[0].IDImage+".jpg";
-							childDetails.appendChild(childImage);
-							childDetails.appendChild(childPseudo);
-							childDetails.appendChild(childCitation);
-						}
-					}
-				}
-			}
-			xmlhttp.open("POST", "selectImage.php", true);
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xmlhttp.send("x=" + dbParam);   
- 
+		function showSearchBar()
+		{		
 		}
-
+		function hideSearchBar()
+		{	
+		}
 		function hideSideBar()
 		{
-			sidebarStyle.display = "none";
+			sideBar.style.display='none';
+			sideBar.className = "";
+
 		}
 		function showSideBar()
 		{
-			imageLoader.style.display="block";
-			childDetails.style.display="none";
-			childDetails.innerHTML = "";
-			sidebarStyle.display = "block";
-
+			imageLoader.style.display = 'block';
+			
+			var nodes = onClickDetails.childNodes;
+			var i= 0;
+			for (i = 0; i < nodes.length;i++)
+			{
+				if(nodes[i].style != null)
+				nodes[i].style.display = "none";
+			}
+			sideBar.className = "w3-animate-right";
+			sideBar.style.display='block';
 		}
 		function showImage()
 		{
-			childDetails.style.display="block";
-			imageLoader.style.display="none";
+
 		}
+
 		function onWindowResize()
 		{
 			rendererW = window.innerWidth;
@@ -361,13 +177,7 @@
 			camera.updateProjectionMatrix();
 
 
-			renderer.setSize(rendererW,rendererH );
-
-			sidebarW = 600;
-			sidebarH = rendererH - 200;
-			sidebarStyle.width = sidebarW+"px";
-			sidebarStyle.height = sidebarH+"px";
-			closeButton.style.bottom = "0px";
+			renderer.setSize(rendererW,rendererH );	
 		}
 
 		function onMouseMove(event)
@@ -393,7 +203,6 @@
 					{
 						if(intersects[0].object.name != 0 && intersects[0].object.type =="VRAI")
 						{
-							console.log(intersects[0].object);
 							onImageClick(intersects[ 0 ].object.name);
 						}
 					}

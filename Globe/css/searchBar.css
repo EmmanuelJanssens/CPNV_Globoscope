@@ -1,0 +1,27 @@
+#searchBar div
+{
+    display: flex;
+    position: absolute;
+    right: 0px;
+    width: 100%;
+
+}
+#searchBar input
+{
+    width: 100%;
+}
+#searchButton
+{
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    height: 40px;
+    width: 100px;
+    
+    background-color: #bcdc53; 
+    
+}
+#searchBar img
+{
+    display: none;
+}

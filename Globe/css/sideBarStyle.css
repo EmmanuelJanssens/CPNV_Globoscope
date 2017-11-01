@@ -1,0 +1,63 @@
+body
+{
+    background-color: black;
+}
+
+#sideBar
+{
+
+    display :none;
+
+    position: absolute;
+    top:150px;
+    right: 0px;
+
+    width: 500px;
+    height: 700px;
+    
+    background-color: #f0f0f2;
+    border-radius: 25px;
+    border-left: 16px solid #bcdc53;   
+}
+
+#onClickDetails
+{
+    display: flex;
+    flex-direction: horizontal;
+    
+    text-align: center;
+    
+    display: block;
+    padding: 40px;
+
+    min-width: 200px;
+    min-height: 500px;
+}
+
+#onClickDetails img
+{
+    border-radius: 20px;
+}
+#closeSideBar
+{
+    cursor: pointer;
+    color:#bcdc53;
+    
+    font-weight: bold;
+    font-size: 1.7em;
+    
+    position: absolute;
+    top: -15px;
+    right: 20px;
+}
+hr
+{
+    border-radius: 10px;
+    border: none;
+    
+    width: 400px;
+    height: 4px;
+    
+    background-color: #bcdc53;
+    
+}
