@@ -46,10 +46,10 @@ function loadData(scene,canvContainer,loadSpinner)
             orientation = new THREE.Vector3();
             zero = new THREE.Vector3();
 
-            var cellW = 128;
-            var cellH = 128;
+            var cellW = 100;
+            var cellH = 125;
 
-            var originalSpacing =1.1;    
+            var originalSpacing =1.3;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
             var totalWidth = collNum.length * originalSpacing;
@@ -57,7 +57,7 @@ function loadData(scene,canvContainer,loadSpinner)
            
             var totalMeridians = 12;
             var meridianWidth = 12;
-            var meridianHeight = 60;
+            var meridianHeight = 54;
 
             var meridianCounter = 0;
             var currentMeridian = 0;
@@ -74,13 +74,17 @@ function loadData(scene,canvContainer,loadSpinner)
 
             var loader = new THREE.TextureLoader();
             loader.load( 'images/earth.jpg', function ( texture ) {
-                var geometry = new THREE.SphereGeometry( rayon - 10, 20, 20 );
+                var geometry = new THREE.SphereGeometry( rayon - 100, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
-                mesh.rotation.y = Math.PI / 1.4;
+                mesh.rotation.z = -Math.PI;
+                mesh.rotation.y = Math.PI/2;
                 scene.add( mesh );
             } );
-
+            
+            var Spherical = new THREE.Spherical();
+            var spherePos = new THREE.Vector3();
+            var decalage = 0;
             for(x = 0; x < data.length;x++)
             {      
                 //charger une image 
@@ -100,66 +104,52 @@ function loadData(scene,canvContainer,loadSpinner)
                     
                     image.src = file;
                     texture =  textureLoader.load( file );
+                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+                    texture.repeat.x = - 1;
+                    texture.repeat.y = - 1;
+                    
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );                
                 }
                 else
                 {                      
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff } );
                     mesh = new THREE.Mesh( plane, material );        
-                }  
-                 //Gesition de l'espacement en fonction de la latitude 
-                /*if(data[x].lat == 4 ||data[x].lat == 5 ||data[x].lat == 6 ||data[x].lat == 7  )
-                {
-                    ySpacing = originalSpacing;                    
-                }
-                else if(data[x].lat == 8 ||data[x].lat == 9 ||data[x].lat == 10)
-                {
-                    ySpacing = originalSpacing;                    
-                }     
-                else if(data[x].lat == 11 ||data[x].lat == 12 ||data[x].lat == 13||data[x].lat ==14)
-                {                  
-                    ySpacing = originalSpacing;                    
-                }      
-                else if(data[x].lat == 15 ||data[x].lat == 16 ||data[x].lat == 17||data[x].lat ==18)
-                {
-                    ySpacing = originalSpacing;                    
-                }    
-                else if(data[x].lat == 19 ||data[x].lat == 20 ||data[x].lat == 21||data[x].lat ==22||data[x].lat ==23||data[x].lat ==24 )
-                {
-                    ySpacing = originalSpacing;                    
-                }
-                else if(data[x].lat == 37||data[x].lat == 38||data[x].lat == 39||data[x].lat == 40||data[x].lat == 41||data[x].lat == 42 )
-                {
-                    ySpacing = originalSpacing;                    
-                }          
-                else if(data[x].lat == 43||data[x].lat == 44||data[x].lat == 45||data[x].lat == 46)   
-                {
-                    ySpacing = originalSpacing;                    
-                }
-                else if(data[x].lat == 47||data[x].lat == 48||data[x].lat == 49||data[x].lat == 50)   
-                {
-                    ySpacing = originalSpacing;                    
-                }
-                else if(data[x].lat == 51||data[x].lat == 52||data[x].lat == 53)   
-                {
-                    ySpacing = originalSpacing;
-                    
-                }
-                else if(data[x].lat == 54||data[x].lat == 55||data[x].lat == 56||data[x].lat == 57)   
-                {
-                    ySpacing = .1;
-                }
-                else
-                {
-                    ySpacing = originalSpacing;
-                }*/
+                } 
+  
+    
 
+                //Methode 1
+                
                 //creer le plane 
                 mesh = new THREE.Mesh( plane, material );
                 
                 //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
+                long = (-( data[x].mer * cellW * meridianWidth * originalSpacing + data[x].lon  * cellW * (xSpacing))/rayon);
+                lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
+            
+                Spherical.set(rayon,lat,long);
+                spherePos.setFromSpherical(Spherical);
+                mesh.lookAt(spherePos);                    
+                mesh.position.set(spherePos.x,spherePos.y,spherePos.z);
+                
+                //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
+                mesh.name = data[x].IDPlace;
+                mesh.type = data[x].ImageOK;
+
+                //orienter les planes vers le centre du cercle
+                //orientation.subVectors(mesh.position, zero).add(mesh.position);
+                //mesh.lookAt(orientation);
+                scene.add( mesh );
+                
+                //Methode 2
+                //creer le plane 
+                /*
+                mesh = new THREE.Mesh( plane, material );
+                
+                //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
                 long = ( data[x].mer * cellW * meridianWidth * originalSpacing + (data[x].lon ) * cellW * (xSpacing))/rayon;
-                lat = 2*Math.atan(Math.exp( (-(  cellH * meridianHeight * ySpacing)/2+ (data[x].lat) *cellH *originalSpacing ) /rayon)) - Math.PI/2;
+                lat = 2*Math.atan(Math.exp( ( (-(  cellH * meridianHeight * ySpacing)/2+ (data[x].lat) *cellH *originalSpacing ) /rayon) - 0.1)) - Math.PI/2;
 
                 _x = rayon* (Math.cos(lat) * Math.cos(long)) ;;
                 _y = rayon* (Math.sin(lat)) ;
@@ -174,9 +164,9 @@ function loadData(scene,canvContainer,loadSpinner)
                 orientation.subVectors(mesh.position, zero).add(mesh.position);
                 mesh.lookAt(orientation);
 
-                scene.add( mesh );   
+                scene.add( mesh ); */
             }
-            
+            scene.rotation.z = Math.PI;
         }
     };
 

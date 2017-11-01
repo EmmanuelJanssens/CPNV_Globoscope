@@ -60,7 +60,8 @@
 					
 		/*Conteneur des détails de l'image recherchée //Onclick */
 		camera.position.z = 7000;
-
+		var axisHelper = new THREE.AxisHelper( 10000 );
+		scene.add( axisHelper );
 		/*Ajouer les élément principaux*/
 		renderer.setSize( rendererW,rendererH);
 
