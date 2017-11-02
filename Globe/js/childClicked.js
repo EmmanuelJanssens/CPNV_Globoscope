@@ -6,7 +6,7 @@ function onImageClick(x)
     xmlhttp = new XMLHttpRequest();
 
     showSideBar();
-
+    onSearchDetails.innerHTML = "";
     xmlhttp.onreadystatechange = function() 
     {
         if (this.readyState == 4 && this.status == 200) 

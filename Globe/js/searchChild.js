@@ -8,9 +8,8 @@ function searchChild()
 
     xmlhttp = new XMLHttpRequest();
 
-    hideSearchBar();
     showSideBar();
-
+    onSearchDetails.innerHTML = "";
     xmlhttp.onreadystatechange = function()
     {
         if(this.readyState ==4 && this.status==200)
@@ -22,7 +21,6 @@ function searchChild()
                 myObj = JSON.parse(this.responseText);
 
                 //pour partir d'une div vide
-                childDetails.innerHTML = "";
                 //tableau de résultat de la recherche/requete SQL
                 //https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
                 var total = myObj.length;
@@ -31,7 +29,25 @@ function searchChild()
                 {
                     if(myObj[i].ImageOK != 0)
                     {			
-                       			
+                        var details =  document.getElementById("onSearchDetails");
+                        var det = document.createElement('div');
+
+                        var img = document.createElement('img');
+                        var searchPseudo = document.createElement('p');
+
+                        img.id=myObj[i].IDImage;
+                        img.src = "images/DB/128-128/"+myObj[i].IDImage+".jpg"
+                        img.onclick = function()
+                        {
+                            onImageClick(myObj[i].IDPlace);
+                        }
+
+                        searchPseudo.innerHTML = myObj[i].Pseudo;
+                        det.appendChild(img);
+                        det.appendChild(searchPseudo);
+
+                        details.appendChild(det);
+
                     }
                 })(i);
             }

@@ -5,7 +5,7 @@
 
 body 
 { 
-    background-color: black;
+    background-color: white;
     margin: 0px;
     overflow: hidden;
 }
@@ -34,3 +34,8 @@ body
     100% { transform: rotate(360deg); }
 }
 
+#progressBar
+{
+    background-color: #bcdc53!important;
+    
+}

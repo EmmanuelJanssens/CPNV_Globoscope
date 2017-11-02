@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="css/style.css"> 	
 		<link rel="stylesheet" href="css/sideBarStyle.css"> 	
 		<link rel="stylesheet" href="css/searchBar.css"> 	
+		<link rel="stylesheet" href="css/searchResults.css"> 	
 
 		
 	</head>
@@ -16,14 +17,19 @@
 	<body>
 
 
+
 	<div id="sideBar">
 		<p id="closeSideBar">X</p>
 		<div class ="loader" id="imageLoader"></div>
-		<div id="onClickDetails">
+		<div id="onClickDetails" >
 				<img id="childImage">
 				<hr id="separator">
 				<p id="childPseudo"></p>
 				<p id="childCitation"></p>
+		</div>
+		<div id="onSearchDetails" class ="flexContainer">
+		<h1>Resultat de la recherche</h1>
+		
 		</div>
 	</div>
 	
@@ -34,6 +40,11 @@
 		</div>
 		<img src="images/searchIcon.png">
 	</div>
+
+	<div id="loadPage">
+		<div id="progressBar">10%</div>
+	</div>
+
 
 	<script src= "js/three.min.js"></script>
 	<script src= "js/three/controls/OrbitControls.js"></script>
@@ -70,35 +81,21 @@
 		container.id = "CanvContainer";
 
 		/**Tout les composant concernant la barre de recherche */
-		var SearchIcon = document.createElement('img');
-		SearchIcon.src = "images/searchIcon.png";
-		SearchIcon.onclick  = showSearchBar;
-		var SearchBar = document.createElement('div');
-		SearchBar.id="searchBar";
+		var SearchTextBox = document.getElementById('searchText');
 
-		var SearchTextBox = document.createElement('input');
-		SearchTextBox.id ="searchTextBox";
-		SearchTextBox.type="text";
-		SearchTextBox.name="searchChild";
-
-		var SearchButton = document.createElement('div');
-		SearchButton.id ="searchButton";
-		SearchButton.value="Search";
-		SearchButton.onclick = searchChild;
+		var SearchButton = document.getElementById('searchButton');
+		SearchButton.onclick = showSearchResults;
 
 
-		SearchButton.style.display = 'none';
-		SearchTextBox.style.display = 'none';
 
-		SearchBar.appendChild(SearchIcon);
-		SearchBar.appendChild(SearchButton);
-		SearchBar.appendChild(SearchTextBox);
 		/**fin de la barre de recherche */
 
 		/**tout les composant concernant le sidebar */
 		var sideBar = document.getElementById('sideBar');
 		var closeSideBar = document.getElementById('closeSideBar');
 		var onClickDetails = document.getElementById('onClickDetails');
+		var onSearchDetails = document.getElementById('onSearchDetails');
+
 		var childImage =document.getElementById("childImage");
 		var childPseudo = document.getElementById("childPseudo");
 		var childCitation = document.getElementById("childCitation");
@@ -119,18 +116,40 @@
 		loader.className="loader";
 		loader.style.display="none";
 		document.body.appendChild(loader);
+
+
+		document.body.appendChild(loader);
 	
 		window.addEventListener('resize',onWindowResize,false);
+
+
 
 		document.onmousedown = onMouseClick;
 		document.onmousemove = onMouseMove;
 		document.body.appendChild(container);
 
-		container.appendChild(SearchBar);
 		container.appendChild(renderer.domElement);
 
-		function showOnClickDetails ()
+		function showSearchResults()
 		{
+			searchChild();
+			onClickDetails.style.display = 'none';
+			onSearchDetails.style.display = 'flex';
+
+			imageLoader.style.display = 'none';
+			var nodes = onSearchDetails.childNodes;
+			var i = 0;
+			for( i = 0; i < nodes.length;i++)
+			{
+				if(nodes[i].style != null)
+					nodes[i].style.display = "block";
+			}
+		}
+		function showOnClickDetails()
+		{
+			onSearchDetails.style.display = 'none';
+			onClickDetails.style.display = 'block';
+
 			imageLoader.style.display = 'none';
 			var nodes = onClickDetails.childNodes;
 			var i= 0;
@@ -156,13 +175,7 @@
 		{
 			imageLoader.style.display = 'block';
 			
-			var nodes = onClickDetails.childNodes;
-			var i= 0;
-			for (i = 0; i < nodes.length;i++)
-			{
-				if(nodes[i].style != null)
-				nodes[i].style.display = "none";
-			}
+
 			sideBar.className = "w3-animate-right";
 			sideBar.style.display='block';
 		}

@@ -28,17 +28,9 @@ function loadData(scene,canvContainer,loadSpinner)
             //Plane de base
             var plane = new THREE.PlaneBufferGeometry(100,125);   
             var material = new THREE.MeshBasicMaterial( {  color: 0xffffff });
-            //nombre de ligne         
-            var rowsNum = [4,3,4,6,6,6,6,6,5,3,3,4];
-            //nombre de collones
-            var collNum = [2,4,6,8,10,12,12,10,8,6,4,2];
-    
-            var _totalCells = 0;  
-            var i = 0;      
-            for( i = 0; i < 12; i ++)
-            {
-                _totalCells  += collNum[i] * rowsNum[i];
-            }
+            
+            var nbImagesLat = [0,0,0,0,2,2,2,2,4,4,4,6,6,6,6,8,8,8,8,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,8,8,8,8,6,6,6,6,4,4,4,2,2,2,2];
+
 
             //coordonées et orientation
             var _x,_y,_z,orientation,zero;
@@ -49,10 +41,9 @@ function loadData(scene,canvContainer,loadSpinner)
             var cellW = 100;
             var cellH = 125;
 
-            var originalSpacing =1.3;    
+            var originalSpacing =1.2;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
-            var totalWidth = collNum.length * originalSpacing;
 
            
             var totalMeridians = 12;
@@ -78,15 +69,20 @@ function loadData(scene,canvContainer,loadSpinner)
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
                 mesh.rotation.z = -Math.PI;
-                mesh.rotation.y = Math.PI/2;
+                mesh.rotation.y = Math.PI/1.7;
                 scene.add( mesh );
             } );
             
             var Spherical = new THREE.Spherical();
             var spherePos = new THREE.Vector3();
             var decalage = 0;
+
+            var pourcent = 0;
+            var progressBar =  document.getElementById("progressBar");     
+                   
             for(x = 0; x < data.length;x++)
             {      
+
                 //charger une image 
                 if(data[x].ImageOK != 0)
                 {
@@ -99,6 +95,10 @@ function loadData(scene,canvContainer,loadSpinner)
                         {
                             showCanvas(canvContainer,loadSpinner);                                
                         }
+                        else
+                        {
+                            pourcent++;
+                        }
                     }
                     file ="images/DB/128-128/"+data[x].IDImage+".jpg";
                     
@@ -109,7 +109,9 @@ function loadData(scene,canvContainer,loadSpinner)
                     texture.repeat.x = - 1;
                     texture.repeat.y = - 1;
                     
-                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );                
+                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );      
+                    
+
                 }
                 else
                 {                      
@@ -117,15 +119,15 @@ function loadData(scene,canvContainer,loadSpinner)
                     mesh = new THREE.Mesh( plane, material );        
                 } 
   
-    
-
-                //Methode 1
                 
+
+                    //Methode 1
+                    
                 //creer le plane 
                 mesh = new THREE.Mesh( plane, material );
                 
                 //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
-                long = (-( data[x].mer * cellW * meridianWidth * originalSpacing + data[x].lon  * cellW * (xSpacing))/rayon);
+                long = (-( (data[x].mer ) * cellW * meridianWidth * originalSpacing + (data[x].lon-7)  * cellW * 12/nbImagesLat[data[x].lat] * (xSpacing))/rayon);
                 lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
             
                 Spherical.set(rayon,lat,long);
@@ -137,34 +139,8 @@ function loadData(scene,canvContainer,loadSpinner)
                 mesh.name = data[x].IDPlace;
                 mesh.type = data[x].ImageOK;
 
-                //orienter les planes vers le centre du cercle
-                //orientation.subVectors(mesh.position, zero).add(mesh.position);
-                //mesh.lookAt(orientation);
-                scene.add( mesh );
-                
-                //Methode 2
-                //creer le plane 
-                /*
-                mesh = new THREE.Mesh( plane, material );
-                
-                //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
-                long = ( data[x].mer * cellW * meridianWidth * originalSpacing + (data[x].lon ) * cellW * (xSpacing))/rayon;
-                lat = 2*Math.atan(Math.exp( ( (-(  cellH * meridianHeight * ySpacing)/2+ (data[x].lat) *cellH *originalSpacing ) /rayon) - 0.1)) - Math.PI/2;
-
-                _x = rayon* (Math.cos(lat) * Math.cos(long)) ;;
-                _y = rayon* (Math.sin(lat)) ;
-                _z = rayon* (Math.cos(lat)  * Math.sin(long));
-
-                //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
-                mesh.name = data[x].IDPlace;
-                mesh.type = data[x].ImageOK;
-                mesh.position.set(_x ,_y,_z);
-
-                //orienter les planes vers le centre du cercle
-                orientation.subVectors(mesh.position, zero).add(mesh.position);
-                mesh.lookAt(orientation);
-
-                scene.add( mesh ); */
+                scene.add( mesh );    
+          
             }
             scene.rotation.z = Math.PI;
         }
