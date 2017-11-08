@@ -70,10 +70,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.enableKeys = true;
 
 	// The four arrow keys
-	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40  };
-
-	// Character keys used for rotating and zooming
-	this.charcodes = { W: 119 , A: 97, S: 115 , D: 100 , PLUS: 43 , MINUS: 45 };
+	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
 
 	// Mouse buttons
 	this.mouseButtons = { ORBIT: THREE.MOUSE.LEFT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.RIGHT };
@@ -746,77 +743,6 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function onKeyPress( event ) {
-
-		//ARROW KEYS
-		switch(event.keyCode){
-			case scope.keys.LEFT:{
-				rotateLeft(0.075);
-			break;
-			}
-
-			case scope.keys.UP:{
-				rotateUp(0.075);
-			break;
-			}
-
-			case scope.keys.RIGHT:{
-				rotateLeft(-0.075);
-			break;
-			}
-
-			case scope.keys.BOTTOM:{
-				rotateUp(-0.075);
-			break;
-			}
-
-			case "default":{
-			break;
-			}
-		}
-
-		//WASD AND +/- FOR ZOOMING
-		switch(event.charCode){
-			case scope.charcodes.A:{
-				rotateLeft(0.075);
-			break;
-			}
-
-			case scope.charcodes.W:{
-				rotateUp(0.075);
-			break;
-			}
-
-			case scope.charcodes.D:{
-				rotateLeft(-0.075);
-			break;
-			}
-
-			case scope.charcodes.S:{
-				rotateUp(-0.075);
-			break;
-			}
-
-			case scope.charcodes.MINUS:{
-				dollyIn( getZoomScale() );
-			break;
-			}
-
-			case scope.charcodes.PLUS:{
-				dollyOut( getZoomScale() );
-			break;
-			}
-
-			case "default":{
-			break;
-			}
-
-		}
-		scope.update();
-
-	}
-
-
 	function onMouseUp( event ) {
 
 		if ( scope.enabled === false ) return;
@@ -978,9 +904,6 @@ THREE.OrbitControls = function ( object, domElement ) {
 	scope.domElement.addEventListener( 'touchstart', onTouchStart, false );
 	scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
 	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
-	
-
-	window.addEventListener( 'keypress', onKeyPress, false);
 
 	window.addEventListener( 'keydown', onKeyDown, false );
 

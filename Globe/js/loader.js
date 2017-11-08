@@ -100,31 +100,28 @@ function loadData(scene,canvContainer,loadSpinner)
                     texture.repeat.x = -1;
                     texture.repeat.y = -1;
                     
-                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );      
-                }
-                else
-                {                      
-                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff } );
-                    mesh = new THREE.Mesh( plane, material );        
-                } 
-                                    
-                //creer le plane 
-                mesh = new THREE.Mesh( plane, material );
+                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );    
+                    
+                    //creer le plane 
+                    mesh = new THREE.Mesh( plane, material );
+                    
+                    //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
+                    long = (-( (data[x].mer ) * cellW * meridianWidth * originalSpacing + (data[x].lon-7)  * cellW * 12/nbImagesLat[data[x].lat] * (xSpacing))/rayon);
+                    lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
                 
-                //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
-                long = (-( (data[x].mer ) * cellW * meridianWidth * originalSpacing + (data[x].lon-7)  * cellW * 12/nbImagesLat[data[x].lat] * (xSpacing))/rayon);
-                lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
-            
-                Spherical.set(rayon,lat,long);
-                spherePos.setFromSpherical(Spherical);
-                mesh.lookAt(spherePos);                    
-                mesh.position.set(spherePos.x,spherePos.y,spherePos.z);
-                
-                //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
-                mesh.name = data[x].IDPlace;
-                mesh.type = data[x].ImageOK;
+                    Spherical.set(rayon,lat,long);
+                    spherePos.setFromSpherical(Spherical);
+                    mesh.lookAt(spherePos);                    
+                    mesh.position.set(spherePos.x,spherePos.y,spherePos.z);
+                    
+                    //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
+                    mesh.name = data[x].IDPlace;
+                    mesh.type = data[x].ImageOK;
 
-                scene.add( mesh );    
+                    scene.add( mesh );    
+                }
+                
+
           
             }
             scene.rotation.z = Math.PI;

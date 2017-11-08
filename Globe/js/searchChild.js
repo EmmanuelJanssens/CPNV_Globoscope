@@ -21,7 +21,9 @@ function searchChild()
             if(this.responseText != "")
             {
                 myObj = JSON.parse(this.responseText);
-
+                console.log(this.responseText);
+                console.log(myObj);
+                
                 //pour partir d'une div vide
                 //tableau de résultat de la recherche/requete SQL
                 //https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
@@ -30,7 +32,8 @@ function searchChild()
                 (function(i)
                 {
                     if(myObj[i].ImageOK != 0)
-                    {			
+                    {		
+                        console.log(myObj[i]);                        
                         var details =  document.getElementById("onSearchDetails");
                         var det = document.createElement('div');
 

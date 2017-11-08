@@ -45,6 +45,7 @@
 	<script src ="js/loader.js"></script>
 	<script src="js/searchChild.js"></script>
 	<script src="js/childClicked.js"></script>
+
 	<script type="application/x-glsl" id="sky-vertex">  
 		varying vec2 vUV;
 
@@ -64,6 +65,7 @@
 		gl_FragColor = vec4(sample.xyz, sample.w);
 		}
 	</script>  
+
 	<script>
 
 		/**Initialisation THREE JS */
@@ -227,7 +229,7 @@
 		function onMouseClick( event ) 
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
-			mouse.y = -(event.clientY / rendererH) * 2 + 1;
+			mouse.y = -(event.clientY /rendererH) * 2 + 1;
 
 			switch(event.button)
 			{
@@ -242,6 +244,7 @@
 					{
 						if(intersects[0].object.name != 0 && intersects[0].object.type =="VRAI")
 						{
+							console.log(intersects[ 0 ].object.name);
 							onImageClick(intersects[ 0 ].object.name);
 						}
 					}
