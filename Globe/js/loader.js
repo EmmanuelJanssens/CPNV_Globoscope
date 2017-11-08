@@ -3,7 +3,6 @@
 
 function loadData(scene,canvContainer,loadSpinner)
 {
-
     var searchObj, dbParam, xmlhttp, data, x = "";
     textureLoader = new THREE.TextureLoader();
 
@@ -15,6 +14,7 @@ function loadData(scene,canvContainer,loadSpinner)
     xmlhttp = new XMLHttpRequest();
 
     //afficher un element de chargement 
+    SearchBox.style.display = "none";
     canvContainer.style.display = "none";
     loadSpinner.style.display = "block";
 
@@ -31,7 +31,6 @@ function loadData(scene,canvContainer,loadSpinner)
             
             var nbImagesLat = [0,0,0,0,2,2,2,2,4,4,4,6,6,6,6,8,8,8,8,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,8,8,8,8,6,6,6,6,4,4,4,2,2,2,2];
 
-
             //coordonées et orientation
             var _x,_y,_z,orientation,zero;
             var long,lat;
@@ -44,7 +43,6 @@ function loadData(scene,canvContainer,loadSpinner)
             var originalSpacing =1.2;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
-
            
             var totalMeridians = 12;
             var meridianWidth = 12;
@@ -63,8 +61,8 @@ function loadData(scene,canvContainer,loadSpinner)
                     imageLoaded++;
             }
 
-            var loader = new THREE.TextureLoader();
-            loader.load( 'images/earth.jpg', function ( texture ) {
+            var TextureLoader = new THREE.TextureLoader();
+            TextureLoader.load( 'images/earth.jpg', function ( texture ) {
                 var geometry = new THREE.SphereGeometry( rayon - 100, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
@@ -75,19 +73,16 @@ function loadData(scene,canvContainer,loadSpinner)
             
             var Spherical = new THREE.Spherical();
             var spherePos = new THREE.Vector3();
-            var decalage = 0;
 
-            var pourcent = 0;
-            var progressBar =  document.getElementById("progressBar");     
                    
             for(x = 0; x < data.length;x++)
             {      
-
                 //charger une image 
                 if(data[x].ImageOK != 0)
                 {
                     var image = new Image();
 
+                    //afficher le canvas lorsque la dernière image est chargée
                     image.onload = function()
                     {
                         imageLoaded--;
@@ -95,34 +90,24 @@ function loadData(scene,canvContainer,loadSpinner)
                         {
                             showCanvas(canvContainer,loadSpinner);                                
                         }
-                        else
-                        {
-                            pourcent++;
-                        }
                     }
-                    file ="images/DB/128-128/"+data[x].IDImage+".jpg";
-                    
+                    file ="images/DB/128-128/"+data[x].IDImage+".jpg";                   
                     image.src = file;
                     texture =  textureLoader.load( file );
-                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
-                    texture.repeat.x = - 1;
-                    texture.repeat.y = - 1;
+                    //Inversion des textures --
+                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                    texture.repeat.x = -1;
+                    texture.repeat.y = -1;
                     
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );      
-                    
-
                 }
                 else
                 {                      
                     material = new THREE.MeshBasicMaterial( {  color: 0xffffff } );
                     mesh = new THREE.Mesh( plane, material );        
                 } 
-  
-                
-
-                    //Methode 1
-                    
+                                    
                 //creer le plane 
                 mesh = new THREE.Mesh( plane, material );
                 
@@ -155,5 +140,7 @@ function showCanvas(canvContainer,loadSpinner)
 {
     canvContainer.style.display = "block";
     loadSpinner.style.display = "none";
+    SearchBox.style.display = "flex";
+    
 }
 

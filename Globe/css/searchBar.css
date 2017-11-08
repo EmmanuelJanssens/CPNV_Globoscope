@@ -1,27 +1,38 @@
-#searchBar div
+
+#searchBar 
 {
     display: flex;
+    align-self: center;
     position: absolute;
-    right: 0px;
     width: 100%;
+    
+    
+    justify-content:space-around;
 
 }
 #searchBar input
 {
     width: 100%;
+    border-radius: 10px 10px 10px 10px;
+
 }
 #searchButton
 {
-    display: flex;
-    align-items: center;
+    position:absolute;
+    
+    right :0px;
     padding-left: 10px;
-    height: 40px;
+    
+    height:100%;
     width: 100px;
     
     background-color: #bcdc53; 
+    border-radius: 0px 10px 10px 0px;
     
-}
-#searchBar img
-{
-    display: none;
+    border-width:2px;
+    border-style: solid;
+    border-color: gray;
+    
+    border-left-style: none;
+    border-bottom-style: none;
 }

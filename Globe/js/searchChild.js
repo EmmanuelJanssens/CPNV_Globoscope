@@ -3,6 +3,7 @@ function searchChild()
     var objJSON,dbParam,xmlhttp,myObj;
 
     //les paramètres a passer dans la requête SQL
+    //SearchTextBox => input de la barre de recherche
     objJSON = {"Pseudo":SearchTextBox.value }
     dbParam = JSON.stringify(objJSON);
 
@@ -10,6 +11,7 @@ function searchChild()
 
     showSideBar();
     onSearchDetails.innerHTML = "";
+    
     xmlhttp.onreadystatechange = function()
     {
         if(this.readyState ==4 && this.status==200)

@@ -2,12 +2,16 @@
     font-family: "CurvedFont";
     src: url("Font/Poppins-Regular.ttf");
 }
+html, body
+{
+    height: 100%;
+}
 
 body 
 { 
     background-color: white;
     margin: 0px;
-    overflow: hidden;
+    overflow: hidden;  
 }
 .loader
 {
