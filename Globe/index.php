@@ -10,19 +10,47 @@
 		<link rel="stylesheet" href="css/sideBarStyle.css?d=<?php echo time(); ?>"> 	
 		<link rel="stylesheet" href="css/searchBar.css?d=<?php echo time(); ?>"> 	
 		<link rel="stylesheet" href="css/searchResults.css?d=<?php echo time(); ?>"> 	
-
+		<link rel="stylesheet" href="css/helpStyle.css?d=<?php echo time(); ?>">
 		
 	</head>
 
 	<body>
+	<span><img id="helpButton" src="images/questionMark.png"></span>
+	<div id="Help">
+		<div id="box">
+			<div id="header">
+				<h3 class="aide" a href="">Help</h3>
+			</div>
+			<p id="closeHelp">X</p>
+			<div id="direction">
+				<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
+				<p> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
+			</div>
+			<div id="Aidereste" class="Aide">
+				<p>+ et - : pour zoomer et dézoomer</p>
+				<hr></hr>
+				<p>Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
+				<hr></hr>
+				<p>Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
+			</div>
+			<div id="languageSelect">
+				<span id="FR">FR</span>/<span id="EN">EN</span>
+			</div>
+		</div>
+
+	</div>
+
+	
 	<div id="sideBar">
 		<p id="closeSideBar">X</p>
 		<div class ="loader" id="imageLoader"></div>
 		<div id="onClickDetails" >
 				<img id="childImage">
 				<hr id="separator">
-				<p id="childPseudo"></p>
-				<p id="childCitation"></p>
+				<div id="description">
+					<p id="childPseudo"></p>
+					<p id="childCitation"></p>
+				</div>
 		</div>
 		<div id="onSearchDetails" class ="flexContainer">
 		<h1>Resultat de la recherche</h1>
@@ -30,11 +58,15 @@
 		</div>
 	</div>
 	
+	<span><img id="showSearch" src = "images/searchIcon.png"></span>
 
 	<div id="searchBar">
 		<input type="text" id="searchText">                                        
 		<span id="searchButton">Recherche</span>
 		</input>
+		<div id="onDynamicSearch">
+
+		</div>
 	</div>
 
 
@@ -123,12 +155,22 @@
 		container.id = "CanvContainer";
 
 		/**Tout les composant concernant la barre de recherche */
+		var showSearchButton = document.getElementById('showSearch');
+		showSearchButton.onclick =  showSearch;
+
 		var SearchBox = document.getElementById('searchBar');
+		SearchBox.style.display = 'none';
 
 		var SearchTextBox = document.getElementById('searchText');
+		SearchTextBox.oninput = OnWriting;
+
+		SearchTextBox.onfocus = function(){ console.log("Writing");}
 
 		var SearchButton = document.getElementById('searchButton');
 		SearchButton.onclick = showSearchResults;
+
+		var dynamicSearchResult = document.getElementById('onDynamicSearch');
+		dynamicSearchResult.style.display = 'none';
 		/**fin de la barre de recherche */
 
 		/**tout les composant concernant le sidebar */
@@ -150,6 +192,16 @@
 		imageLoader.className="loader";
 		/**Fin des composant de la side Bar */
 
+		/* Div d'aide */
+		var helpDiv = document.getElementById('Help');
+		helpDiv.style.display = 'none';
+
+		var helpButton = document.getElementById('helpButton');
+		helpButton.style.display = 'block';
+		helpButton.onclick = showHelp;
+
+		var closeHelpDiv = document.getElementById('closeHelp');
+		closeHelpDiv.onclick= closeHelp;
 
 		/*Loader*/
 		var loader = document.createElement('div');
@@ -158,7 +210,9 @@
 		document.body.appendChild(loader);
 
 		document.body.appendChild(loader);
-	
+		
+		var searchMedia =window.matchMedia('@media all and (max-width: 480px)');
+
 		window.addEventListener('resize',onWindowResize,false);
 
 		document.onmousedown = onMouseClick;
@@ -167,9 +221,53 @@
 
 		container.appendChild(renderer.domElement);
 
+		function showSearch()
+		{
+			SearchBox.style.display='flex';
+			showSearchButton.style.display ='none';
+			SearchBox.className = "w3-animate-top";
+			SearchTextBox.focus();
+		}
+		function hideSearch()
+		{
+			SearchBox.style.display = 'none';
+			showSearchButton.style.display = 'block';
+		}
+		function mobileButtonDisplays(disp)
+		{
+			showSearchButton.style.display = disp;
+			helpButton.style.display = disp;		
+		}
+		function showHelp()
+		{
+			helpDiv.style.display = 'block';
+			helpDiv.className = "w3-animate-left";
+			helpButton.style.display = 'none';
+
+			console.log(window.innerWidth);
+			if(window.innerWidth <= 480)
+			{
+				mobileButtonDisplays('none');
+			}
+		}
+		function closeHelp()
+		{
+			helpDiv.style.display = 'none';
+			helpButton.style.display = 'block';
+			console.log(window.innerWidth);
+			if(window.innerWidth <= 480)
+			{
+				mobileButtonDisplays('block');			
+			}			
+		}
 		function showSearchResults()
 		{
 			searchChild();
+
+			if(window.innerWidth > 480)
+				showSearchButton.style.display = 'block';
+			
+			SearchBox.style.display = 'none';
 			onClickDetails.style.display = 'none';
 			onSearchDetails.style.display = 'flex';
 
@@ -185,7 +283,7 @@
 		function showOnClickDetails()
 		{
 			onSearchDetails.style.display = 'none';
-			onClickDetails.style.display = 'block';
+			onClickDetails.style.display = 'flex';
 
 			imageLoader.style.display = 'none';
 			var nodes = onClickDetails.childNodes;
@@ -193,14 +291,18 @@
 			for (i = 0; i < nodes.length;i++)
 			{
 				if(nodes[i].style != null)
-					nodes[i].style.display = "block";
+					nodes[i].style.display = "flex";
 			}
 		}
 		function hideSideBar()
 		{
+			showSearchButton.style.display = 'block';
 			sideBar.style.display='none';
 			sideBar.className = "";
-
+			if(window.innerWidth <= 480)
+			{
+				mobileButtonDisplays('block');				
+			}
 		}
 		function showSideBar()
 		{
@@ -209,6 +311,12 @@
 
 			sideBar.className = "w3-animate-right";
 			sideBar.style.display='block';
+
+			if(window.innerWidth <= 480)
+			{
+				mobileButtonDisplays('none');
+			}
+
 		}
 		function onWindowResize()
 		{
@@ -221,16 +329,110 @@
 			renderer.setSize(rendererW,rendererH );	
 		}
 
+		function OnWriting()
+		{
+			var objJSON,dbParam,xmlhttp,myObj;
+
+			//les paramètres a passer dans la requête SQL
+			//SearchTextBox => input de la barre de recherche
+			objJSON = {"Pseudo":SearchTextBox.value }
+			dbParam = JSON.stringify(objJSON);
+
+			xmlhttp = new XMLHttpRequest();
+
+			
+			var div,img,pseudo,sep;
+			dynamicSearchResult.innerHTML = "";
+
+
+			dynamicSearchResult.style.display ='flex';
+			xmlhttp.onreadystatechange = function()
+			{
+				if(this.readyState ==4 && this.status==200)
+				{
+
+					///Afficher un tableau avec tout les résultats
+					if(this.responseText != "")
+					{
+						myObj = JSON.parse(this.responseText);
+
+						
+						//pour partir d'une div vide
+						//tableau de résultat de la recherche/requete SQL
+						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
+						
+						if(SearchTextBox.value != "")
+						{						
+							var total = myObj.length;
+
+							if(total > 0)
+							{
+								for(var i = 0; i < myObj.length; i++)
+								(function(i)
+								{
+									if(myObj[i].ImageOK != 0)
+									{		
+
+										div = document.createElement('div');
+										sep = document.createElement('hr');
+										img = document.createElement('img');
+										img.src =  "images/DB/128-128/"+myObj[i].IDImage+".jpg";
+										img.onclick = function()
+										{
+											onImageClick(myObj[i].IDPlace);
+											SearchBox.style.display = 'none';
+											showSearchButton.style.display = 'block';
+										}
+										pseudo = document.createElement('p');
+										pseudo.innerHTML =  myObj[i].Pseudo;
+
+										div.appendChild(img);
+										div.appendChild(pseudo);
+										dynamicSearchResult.appendChild(sep);
+										dynamicSearchResult.appendChild(div);
+
+										console.log(myObj[i]);                        
+									}
+								})(i);
+							}
+							else
+							{
+								dynamicSearchResult.style.display ='none';
+							}
+						}
+					}					
+				}
+  		 	 }
+				
+			if(	SearchTextBox.value != "")
+			{
+				xmlhttp.open("POST", "searchChild.php", true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send("x=" + dbParam); 
+			}
+		}
 		function onMouseMove(event)
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY / rendererH) * 2 + 1;		
+
+			if(window.innerWidth < 480)
+			{
+				if(sideBar.style.display != "none"  || helpDiv.style.display != "none"	||	SearchBox.style.display !="none")
+ 
+				{
+					showSearchButton.style.display = "none";
+				}
+				else
+				{
+					showSearchButton.style.display = "block";
+				}
+			}
 		}
 		function onMouseClick( event ) 
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY /rendererH) * 2 + 1;
-
 			switch(event.button)
 			{
 				case 0:
@@ -244,8 +446,9 @@
 					{
 						if(intersects[0].object.name != 0 && intersects[0].object.type =="VRAI")
 						{
-							console.log(intersects[ 0 ].object.name);
 							onImageClick(intersects[ 0 ].object.name);
+							SearchBox.style.display = 'none';
+							showSearchButton.style.display = 'block';
 						}
 					}
 				break;

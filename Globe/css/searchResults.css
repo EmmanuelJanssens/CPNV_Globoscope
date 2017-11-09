@@ -1,3 +1,4 @@
+
 #onSearchDetails img
 {
     border-radius: 10px;
@@ -10,23 +11,18 @@
     border-radius: 10px;
     background-color: #bcdc53;
     margin: 5px;
-}
-#onSearchDetails
-{
     text-align: center;
 }
-
-.flexContainer
+#onSearchDetails
 {
     display: flex;
     flex-flow: row wrap;
     overflow-y: auto;
     
-    
-    margin-top : 100px;
-    padding: 10px;
-    height:  520px;
+    padding: 30px;
+    height:  100%;
     
     align-content: flex-start;
     justify-content: center;
 }
+

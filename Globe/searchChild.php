@@ -6,7 +6,7 @@
         //$connexion = new mysqli("localhost", "id3116159_admingloboscope", "flocon123", "id3116159_globoscope");
 
         //Connexion en local
-        $connexion = new mysqli("localhost", "root", "", "globoscope");            
+        $connexion = new mysqli("localhost", "root", "", "globoscope");  
         return $connexion;
     }
 
@@ -17,7 +17,7 @@
     $connexion = getBD();
 
     //Requête pour récuperer les détails de l'enfant
-    $reponse = 'SELECT Pseudo,IDPlace,IDImage,ImageOK  FROM images WHERE Pseudo LIKE "%'.$obj->Pseudo.'%"';
+    $reponse = 'SELECT Pseudo,IDPlace,IDImage,ImageOK  FROM images WHERE Pseudo LIKE \'%'.$obj->Pseudo.'%\'';
 
     //Executer la requête
     $resultats = $connexion->query($reponse);

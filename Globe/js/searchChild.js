@@ -21,8 +21,7 @@ function searchChild()
             if(this.responseText != "")
             {
                 myObj = JSON.parse(this.responseText);
-                console.log(this.responseText);
-                console.log(myObj);
+
                 
                 //pour partir d'une div vide
                 //tableau de résultat de la recherche/requete SQL
@@ -33,7 +32,6 @@ function searchChild()
                 {
                     if(myObj[i].ImageOK != 0)
                     {		
-                        console.log(myObj[i]);                        
                         var details =  document.getElementById("onSearchDetails");
                         var det = document.createElement('div');
 

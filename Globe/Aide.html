@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <title>Photosphère avec three.js</title>
+    <style>
+        @font-face {
+            font-family: 'JosefinSans-Regular';
+            src: url('police/JosefinSans-Regular.ttf');
+            /* font-family: "JosefinSans-Regular", Gadget, sans-serif;*/
+        }
+        
+        body {
+            background-color: black;
+        }
+        
+        #box {
+            border-radius: 15px 15px 15px 15px;
+            position: absolute;
+            z-index: 1;
+        }
+        
+        #direction {
+            margin-top: 10px;
+            margin-left: 10px;
+            float: left;
+            padding-right: 10px;
+        }
+        
+        #Aidedirections {
+            margin-top: 10px;
+            float: right;
+        }
+        
+        #Aidereste {
+            margin-left: 10px;
+            margin-top: 15px;
+            padding-top: 30px;
+        }
+        
+        .Aide {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div class="aide" a href="">Help</div>
+    </div>
+    <div id="box">
+        <div id="direction"> <img src="../Image/direction2.jpg" height="50" width="80" alt="touches directions" /></div>
+        <div id="Aidedirections" class="Aide"> : pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez
+            <p>: for a vertically and a horizontally deplacement or drag and drop with the mouse</p>
+        </div>
+        <div id="Aidereste" class="Aide">
+            <p>+ et - : pour zoomer et dézoomer</p>
+            <p>+ and - : for zoom in and zoom out</p>
+            <p>Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
+            <p>Click on the picture to enlarge and display the informations</p>
+            <p>Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
+            <p>Write the nickname in the research tool to find your picture</p>
+        </div>
+    </div>
+</body>
+
+</html>

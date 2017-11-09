@@ -14,7 +14,7 @@ function loadData(scene,canvContainer,loadSpinner)
     xmlhttp = new XMLHttpRequest();
 
     //afficher un element de chargement 
-    SearchBox.style.display = "none";
+    showSearchButton.style.display = "none";
     canvContainer.style.display = "none";
     loadSpinner.style.display = "block";
 
@@ -137,7 +137,7 @@ function showCanvas(canvContainer,loadSpinner)
 {
     canvContainer.style.display = "block";
     loadSpinner.style.display = "none";
-    SearchBox.style.display = "flex";
+    showSearchButton.style.display = "block";
     
 }
 

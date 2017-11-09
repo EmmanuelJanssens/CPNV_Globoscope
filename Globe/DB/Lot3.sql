@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
+-- version 4.6.6
 -- https://www.phpmyadmin.net/
 --
--- Client :  127.0.0.1
--- Généré le :  Lun 30 Octobre 2017 à 16:22
--- Version du serveur :  5.7.14
--- Version de PHP :  5.6.25
+-- Host: localhost:3306
+-- Generation Time: Nov 09, 2017 at 01:43 PM
+-- Server version: 10.1.20-MariaDB
+-- PHP Version: 7.0.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -16,14 +16,17 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+DROP DATABASE IF EXISTS `globoscope`;
 --
--- Base de données :  `globoscope_lot3`
+-- Database: `id3116159_globoscope`
 --
+CREATE DATABASE IF NOT EXISTS `globoscope` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `globoscope`;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `images`
+-- Table structure for table `images`
 --
 
 CREATE TABLE `images` (
@@ -40,7 +43,7 @@ CREATE TABLE `images` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `images`
+-- Dumping data for table `images`
 --
 
 INSERT INTO `images` (`IDPlace`, `IDImage`, `mer`, `lat`, `lon`, `Pseudo`, `Droit`, `Slogan`, `Provenance`, `ImageOK`) VALUES
@@ -5043,11 +5046,11 @@ INSERT INTO `images` (`IDPlace`, `IDImage`, `mer`, `lat`, `lon`, `Pseudo`, `Droi
 (3760, '9-9-9', 9, 9, 9, '', '', '', '', '0');
 
 --
--- Index pour les tables exportées
+-- Indexes for dumped tables
 --
 
 --
--- Index pour la table `images`
+-- Indexes for table `images`
 --
 ALTER TABLE `images`
   ADD PRIMARY KEY (`IDImage`);
