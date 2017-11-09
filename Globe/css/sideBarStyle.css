@@ -2,15 +2,14 @@
 
 #sideBar
 {
-
     display :none;
 
     position: absolute;
-    top:150px;
-    right: 0px;
+    top:30px;
+    right: 2px;
 
-    width: 500px;
-    height: 700px;
+    width: 100%;
+    height: 94%;
     
     background-color: #f0f0f2;
     border-radius: 25px;
@@ -19,21 +18,23 @@
 
 #onClickDetails
 {
-    display: flex;
-    flex-direction: horizontal;
-    
+    display: block;
+    position: relative;
     text-align: center;
     
-    display: block;
     padding: 40px;
 
-    min-width: 200px;
-    min-height: 500px;
 }
 
 #onClickDetails img
 {
+ 
+    margin:auto;
     border-radius: 20px;
+    width: 100%;
+    height: auto;
+    
+      
 }
 #closeSideBar
 {
@@ -49,12 +50,42 @@
 }
 hr
 {
+    
+    margin:auto;
+    margin-top: 10px;
     border-radius: 10px;
     border: none;
     
-    width: 400px;
+    width: 80%;
     height: 4px;
     
     background-color: #bcdc53;
     
 }
+
+
+
+/* Mise en page pour les grands écrans */
+@media (min-width: 760px) 
+{
+    #sideBar
+    {
+        top: 20%;
+        width: 400px;
+        height: 60%;
+
+    }
+    
+    #onClickDetails
+    {
+        height: 100px;
+    }
+    #onClickDetails img
+    {
+        margin:auto;
+        width: 50%;
+        height: auto;
+        
+    }
+}
+
