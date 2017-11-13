@@ -395,7 +395,7 @@
 										sep = document.createElement('span');
 										sep.id = "separator";
 										img = document.createElement('img');
-										img.src =  "images/DB/128-128/"+myObj[i].IDImage+".jpg";
+										img.src =  "images/64-64/"+myObj[i].IDImage+".jpg";
 										img.onclick = function()
 										{
 											onImageClick(myObj[i].IDPlace);
