@@ -82,15 +82,7 @@ function loadData(scene,canvContainer,loadSpinner)
                 {
                     var image = new Image();
 
-                    //afficher le canvas lorsque la dernière image est chargée
-                    image.onload = function()
-                    {
-                        imageLoaded--;
-                        if(imageLoaded <= 0)
-                        {
-                            showCanvas(canvContainer,loadSpinner);                                
-                        }
-                    }
+           
                     file ="images/DB/128-128/"+data[x].IDImage+".jpg";                   
                     image.src = file;
                     texture =  textureLoader.load( file );
@@ -125,6 +117,8 @@ function loadData(scene,canvContainer,loadSpinner)
           
             }
             scene.rotation.z = Math.PI;
+            showCanvas(canvContainer,loadSpinner);                                
+            
         }
     };
 
