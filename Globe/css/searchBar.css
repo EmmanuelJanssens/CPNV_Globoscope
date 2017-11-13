@@ -52,20 +52,22 @@
 #onDynamicSearch
 {
     flex-flow: column;
-    background-color: rgba(255,255,255,.8);
-    
+    background-color: rgba(255,255,255,.8);   
     position: absolute;
     width: 100%;
-    height: auto;
     max-height: 400px;
     top:40px;
     
     overflow-y: auto;
 }
-#onDynamicSearch hr
+
+#separator
 {
+    padding: 1px;
+    display: block;
+    margin: none;
     width: 100%;
-    height: 1px;
+    background-color:  #bcdc53;
 }
 #onDynamicSearch div
 {
@@ -74,11 +76,13 @@
     align-items: center;
     
     padding: 10px;
+    flex-shrink: 0; 
     
 }
 #onDynamicSearch div img
 {
-    width: 60px;
+    width: 20%;
+    height: auto;
     border-radius: 100%;
     margin-right: 40px;
 }

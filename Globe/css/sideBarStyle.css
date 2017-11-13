@@ -12,7 +12,7 @@
     border-radius: 25px;
     border-left: 16px solid #bcdc53;  
     
-
+    max-width: 500px;
 }
 
 #onClickDetails
@@ -54,20 +54,7 @@
     top: -15px;
     right: 20px;
 }
-hr
-{
-    
-    margin:auto;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: none;
-    
-    width: 80%;
-    height: 4px;
-    
-    background-color: #bcdc53;
-    
-}
+
 
 #description
 {
@@ -110,7 +97,7 @@ hr
     }
     hr
     {
-        width: 0px;
-        height: 100%
+        width: 4px;
+        height: 100%;
     }
 }

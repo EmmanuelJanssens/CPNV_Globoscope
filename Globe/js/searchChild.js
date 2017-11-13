@@ -39,7 +39,7 @@ function searchChild()
                         var searchPseudo = document.createElement('p');
 
                         img.id=myObj[i].IDImage;
-                        img.src = "images/DB/128-128/"+myObj[i].IDImage+".jpg"
+                        img.src = "images/DB/64-64/"+myObj[i].IDImage+".jpg"
                         img.onclick = function()
                         {
                             onImageClick(myObj[i].IDPlace);

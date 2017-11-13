@@ -1,0 +1,35 @@
+#ProgressBar
+{
+
+  
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin: auto;
+  margin-top:100px;
+  width: 500px;
+  
+  text-align: center;
+}
+#progressBackground
+{
+  display:block;
+  width: 400px;
+  height: 30px;
+  
+  background-color: lightgray;
+  
+  border-radius: 5px;
+}
+
+#progressValue
+{
+  display: block;
+  width: 0%;
+  height: 100%;
+  
+  background-color: #bcdc53;
+  
+  border-radius: 5px;
+
+}
