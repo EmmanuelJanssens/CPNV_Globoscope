@@ -11,8 +11,7 @@
 		<link rel="stylesheet" href="css/searchBar.css?d=<?php echo time(); ?>"> 	
 		<link rel="stylesheet" href="css/searchResults.css?d=<?php echo time(); ?>"> 	
 		<link rel="stylesheet" href="css/helpStyle.css?d=<?php echo time(); ?>">
-		<link rel="stylesheet" href="css/progressBar.css?d=<?php echo time(); ?>"> 	
-
+		
 	</head>
 
 	<body>
@@ -40,13 +39,14 @@
 		</div>
 
 	</div>
+
 	
 	<div id="sideBar">
 		<p id="closeSideBar">X</p>
 		<div class ="loader" id="imageLoader"></div>
 		<div id="onClickDetails" >
 				<img id="childImage">
-				<span id="separator"></span>
+				<hr id="separator">
 				<div id="description">
 					<p id="childPseudo"></p>
 					<p id="childCitation"></p>
@@ -69,23 +69,6 @@
 		</div>
 	</div>
 
-	<div id="ProgressBar">
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque non odio vel tristique.
-		 Nulla ut lectus in odio condimentum volutpat. Quisque ultrices volutpat scelerisque.
-		  Nam vitae tristique lectus, sed viverra massa. Nullam gravida sollicitudin justo ac pellentesque.
-		   Ut orci orci, aliquet at ipsum in, varius dictum est. Maecenas hendrerit malesuada velit ac sodales.
-			Proin aliquam eros sed magna blandit, ac facilisis mauris molestie. Duis condimentum, tortor sit amet condimentum varius,
-			diam lectus pharetra est, id finibus mauris ipsum eget massa. Aliquam vestibulum, sem vitae varius lobortis, quam neque vulputate nisi, 
-			sed molestie eros elit non augue. Integer faucibus, lacus a finibus bibendum, lectus augue congue magna, hendrerit bibendum mauris lacus vitae mi. 
-			Etiam ultricies ut magna vitae pellentesque. Nulla ac massa orci. Nunc fermentum, magna ac finibus eleifend, nisl ligula facilisis lorem, et bibendum ante quam quis quam. 
-			Aliquam porta urna vel neque convallis accumsan. Fusce vel iaculis sem. 
-			</p>		   
-	<p id="loadingState">
-	</p>
-	<span id="progressBackground">
-			<span  id="progressValue"></span>             
-	</span>
-	</div>
 
 
 	<script src= "js/three.min.js"></script>
@@ -178,21 +161,16 @@
 		var SearchBox = document.getElementById('searchBar');
 		SearchBox.style.display = 'none';
 
-		var xmlSearch;
 		var SearchTextBox = document.getElementById('searchText');
 		SearchTextBox.oninput = OnWriting;
 
-		SearchTextBox.onfocus = function()
-		{
-			xmlSearch = new XMLHttpRequest();
-		}
+		SearchTextBox.onfocus = function(){ console.log("Writing");}
 
 		var SearchButton = document.getElementById('searchButton');
 		SearchButton.onclick = showSearchResults;
 
 		var dynamicSearchResult = document.getElementById('onDynamicSearch');
 		dynamicSearchResult.style.display = 'none';
-
 		/**fin de la barre de recherche */
 
 		/**tout les composant concernant le sidebar */
@@ -226,8 +204,14 @@
 		closeHelpDiv.onclick= closeHelp;
 
 		/*Loader*/
-		var progressBar = document.getElementById('ProgressBar');
+		var loader = document.createElement('div');
+		loader.className="loader";
+		loader.style.display="none";
+		document.body.appendChild(loader);
 
+		document.body.appendChild(loader);
+		
+		var searchMedia =window.matchMedia('@media all and (max-width: 480px)');
 
 		window.addEventListener('resize',onWindowResize,false);
 
@@ -235,11 +219,6 @@
 		document.onmousemove = onMouseMove;
 		document.body.appendChild(container);
 
-		renderer.domElement.onclick = function()
-		{
-			SearchBox.style.display = "none";
-			showSearchButton.style.display = 'block';
-		}
 		container.appendChild(renderer.domElement);
 
 		function showSearch()
@@ -254,7 +233,7 @@
 			SearchBox.style.display = 'none';
 			showSearchButton.style.display = 'block';
 		}
-		function mobileDisplay(disp)
+		function mobileButtonDisplays(disp)
 		{
 			showSearchButton.style.display = disp;
 			helpButton.style.display = disp;		
@@ -265,19 +244,20 @@
 			helpDiv.className = "w3-animate-left";
 			helpButton.style.display = 'none';
 
+			console.log(window.innerWidth);
 			if(window.innerWidth <= 480)
 			{
-				SearchBox.style.display = 'none';
-				mobileDisplay('none');
+				mobileButtonDisplays('none');
 			}
 		}
 		function closeHelp()
 		{
 			helpDiv.style.display = 'none';
 			helpButton.style.display = 'block';
+			console.log(window.innerWidth);
 			if(window.innerWidth <= 480)
 			{
-				mobileDisplay('block');			
+				mobileButtonDisplays('block');			
 			}			
 		}
 		function showSearchResults()
@@ -321,7 +301,7 @@
 			sideBar.className = "";
 			if(window.innerWidth <= 480)
 			{
-				mobileDisplay('block');				
+				mobileButtonDisplays('block');				
 			}
 		}
 		function showSideBar()
@@ -334,7 +314,7 @@
 
 			if(window.innerWidth <= 480)
 			{
-				mobileDisplay('none');
+				mobileButtonDisplays('none');
 			}
 
 		}
@@ -352,55 +332,56 @@
 		function OnWriting()
 		{
 			var objJSON,dbParam,xmlhttp,myObj;
+
 			//les paramètres a passer dans la requête SQL
 			//SearchTextBox => input de la barre de recherche
 			objJSON = {"Pseudo":SearchTextBox.value }
 			dbParam = JSON.stringify(objJSON);
+
+			xmlhttp = new XMLHttpRequest();
+
 			
 			var div,img,pseudo,sep;
 			dynamicSearchResult.innerHTML = "";
 
-			
-			xmlSearch.abort();
-			xmlSearch.onreadystatechange = function()
+
+			dynamicSearchResult.style.display ='flex';
+			xmlhttp.onreadystatechange = function()
 			{
-				if(this.readyState==4 && this.status == 0)
-				{
-					console.log("canceled "+SearchTextBox.value);
-				}
 				if(this.readyState ==4 && this.status==200)
 				{
-					dynamicSearchResult.style.display ='flex';
 
 					///Afficher un tableau avec tout les résultats
 					if(this.responseText != "")
 					{
 						myObj = JSON.parse(this.responseText);
+
+						
 						//pour partir d'une div vide
 						//tableau de résultat de la recherche/requete SQL
-						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop						
+						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop
+						
 						if(SearchTextBox.value != "")
 						{						
 							var total = myObj.length;
 
 							if(total > 0)
 							{
-								for(var i = 0; i < total; i++)
+								for(var i = 0; i < myObj.length; i++)
 								(function(i)
 								{
 									if(myObj[i].ImageOK != 0)
 									{		
 
 										div = document.createElement('div');
-										sep = document.createElement('span');
-										sep.id = "separator";
+										sep = document.createElement('hr');
 										img = document.createElement('img');
-										img.src =  "images/64-64/"+myObj[i].IDImage+".jpg";
+										img.src =  "images/DB/128-128/"+myObj[i].IDImage+".jpg";
 										img.onclick = function()
 										{
 											onImageClick(myObj[i].IDPlace);
 											SearchBox.style.display = 'none';
-											showSearchButton.style.display = 'none';
+											showSearchButton.style.display = 'block';
 										}
 										pseudo = document.createElement('p');
 										pseudo.innerHTML =  myObj[i].Pseudo;
@@ -410,6 +391,7 @@
 										dynamicSearchResult.appendChild(sep);
 										dynamicSearchResult.appendChild(div);
 
+										console.log(myObj[i]);                        
 									}
 								})(i);
 							}
@@ -424,9 +406,9 @@
 				
 			if(	SearchTextBox.value != "")
 			{
-				xmlSearch.open("POST", "searchChild.php", true);
-				xmlSearch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xmlSearch.send("x=" + dbParam); 
+				xmlhttp.open("POST", "searchChild.php", true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send("x=" + dbParam); 
 			}
 		}
 		function onMouseMove(event)
@@ -499,7 +481,7 @@
 			}
 			renderer.render( scene, camera );
 		}
-		loadData(scene,container,progressBar);
+		loadData(scene,container,loader);
 		animate();
 
 	</script>

@@ -1,12 +1,11 @@
 
 
-var imageLoaded = 0;
-            
+
 function loadData(scene,canvContainer,loadSpinner)
 {
     var searchObj, dbParam, xmlhttp, data, x = "";
     textureLoader = new THREE.TextureLoader();
-    
+
     //données JSON
     searchObj = { "table":"images" };
     //convertir les données JSON
@@ -17,31 +16,12 @@ function loadData(scene,canvContainer,loadSpinner)
     //afficher un element de chargement 
     showSearchButton.style.display = "none";
     canvContainer.style.display = "none";
-
-    var loadValue = document.getElementById('progressValue');
-    var loadStatus = document.getElementById('loadingState');
+    loadSpinner.style.display = "block";
 
     xmlhttp.onreadystatechange = function() 
     {
-        if(this.readyState == 0 && this.status == 200)
+        if (this.readyState == 4 && this.status == 200) 
         {
-            loadStatus.innerHTML  = "En attente";            
-        }
-        if(this.readyState == 1 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Connecté";            
-        }
-        else if(this.readyState == 2 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Recupération des données";            
-        }
-        else if(this.readyState == 2 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Chargement des données";            
-        }
-        else if (this.readyState == 4 && this.status == 200) 
-        {            
-            loadStatus.innerHTML  = "Chargemement des Images";
             //convertir la requète php dans loader.php qui à été encodé pour pouvoir lire en JSON
             data = JSON.parse(this.responseText);
 
@@ -60,7 +40,7 @@ function loadData(scene,canvContainer,loadSpinner)
             var cellW = 100;
             var cellH = 125;
 
-            var originalSpacing =1;    
+            var originalSpacing =1.2;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
            
@@ -68,20 +48,22 @@ function loadData(scene,canvContainer,loadSpinner)
             var meridianWidth = 12;
             var meridianHeight = 54;
 
+            var meridianCounter = 0;
+            var currentMeridian = 0;
 
             var rayon =  (cellW*originalSpacing*meridianWidth*totalMeridians)/(2*Math.PI);
             
             var i = 0;
-            var totalImages = 0;
-             
+            var imageLoaded = 0;
             for(i in data)
             {
                 if(data[i].ImageOK == "VRAI")
-                    totalImages++;
+                    imageLoaded++;
             }
+
             var TextureLoader = new THREE.TextureLoader();
             TextureLoader.load( 'images/earth.jpg', function ( texture ) {
-                var geometry = new THREE.SphereGeometry( rayon - 10, 30, 30 );
+                var geometry = new THREE.SphereGeometry( rayon - 100, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
                 mesh.rotation.z = -Math.PI;
@@ -92,24 +74,18 @@ function loadData(scene,canvContainer,loadSpinner)
             var Spherical = new THREE.Spherical();
             var spherePos = new THREE.Vector3();
 
+                   
             for(x = 0; x < data.length;x++)
             {      
                 //charger une image 
                 if(data[x].ImageOK != 0)
                 {
                     var image = new Image();
-                    file ="images/64-64/"+data[x].IDImage+".jpg";                   
+
+           
+                    file ="images/DB/128-128/"+data[x].IDImage+".jpg";                   
                     image.src = file;
-                    texture =  textureLoader.load( file, function()
-                    {
-                        imageLoaded++;
-                        loadValue.style.width = (imageLoaded/totalImages)*100+"%";                                            
-                        if(imageLoaded >= totalImages-200)
-                        {
-                            canvContainer.className= "w3-animate-opacity";
-                            showCanvas(canvContainer,loadSpinner);        
-                        }
-                    } );
+                    texture =  textureLoader.load( file );
 
                     //Inversion des textures --
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -134,18 +110,20 @@ function loadData(scene,canvContainer,loadSpinner)
                     mesh.name = data[x].IDPlace;
                     mesh.type = data[x].ImageOK;
 
-                    scene.add( mesh );  
-                }          
+                    scene.add( mesh );    
+                }
+                
+
+          
             }
             scene.rotation.z = Math.PI;
+            showCanvas(canvContainer,loadSpinner);                                
             
         }
     };
 
     xmlhttp.open("POST", "loader.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.setRequestHeader("Content-Length", "application/x-www-form-urlencoded");
-    
     xmlhttp.send("x=" + dbParam);    
 
 }
