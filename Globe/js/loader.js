@@ -59,7 +59,7 @@ function loadData(scene,canvContainer,loadSpinner)
             var cellW = 100;
             var cellH = 125;
 
-            var originalSpacing =1.2;    
+            var originalSpacing =1.05;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
            
@@ -82,7 +82,7 @@ function loadData(scene,canvContainer,loadSpinner)
             }
             var TextureLoader = new THREE.TextureLoader();
             TextureLoader.load( 'images/earth.jpg', function ( texture ) {
-                var geometry = new THREE.SphereGeometry( rayon - 100, 30, 30 );
+                var geometry = new THREE.SphereGeometry( rayon - 15, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
                 mesh.rotation.z = -Math.PI;
@@ -100,19 +100,20 @@ function loadData(scene,canvContainer,loadSpinner)
                 {
                     var image = new Image();
                     //afficher le canvas lorsque la dernière image est chargée
-                    image.onload = function()
+                    
+                    file ="images/64-64/"+data[x].IDImage+".jpg";                   
+                    image.src = file;
+                    texture =  textureLoader.load( file ,function()
                     {
                         imageLoaded++;
-                        loadValue.style.width = (imageLoaded/totalImages)*100+"%";                                            
+                        loadValue.style.width = (imageLoaded/totalImages)*100+"%";   
+                        
                         if(imageLoaded >= totalImages-200)
                         {
                             canvContainer.className= "w3-animate-opacity";
                             showCanvas(canvContainer,loadSpinner);        
-                        }
-                    }
-                    file ="images/64-64/"+data[x].IDImage+".jpg";                   
-                    image.src = file;
-                    texture =  textureLoader.load( file );
+                        } 
+                    });
 
                     //Inversion des textures --
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -136,8 +137,8 @@ function loadData(scene,canvContainer,loadSpinner)
                     //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
                     mesh.name = data[x].IDPlace;
                     mesh.type = data[x].ImageOK;
-
                     scene.add( mesh );  
+                    
                 }          
             }
             scene.rotation.z = Math.PI;
