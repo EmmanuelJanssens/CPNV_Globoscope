@@ -30,7 +30,7 @@ function onImageClick(x)
                     childImage.src = "images/400-500/"+myObj[0].IDImage+".jpg";
                     childPseudo.innerHTML = myObj[0].Pseudo;
                     childCitation.innerHTML =  myObj[0].Slogan;
-                    
+                    childRight.innerHTML = myObj[0].Droit;
                 }
             }
         }

@@ -50,6 +50,7 @@
 				<div id="description">
 					<p id="childPseudo"></p>
 					<p id="childCitation"></p>
+					<p id="childRight"></p>
 				</div>
 		</div>
 		<div id="onSearchDetails" class ="flexContainer">
@@ -69,7 +70,7 @@
 		</div>
 	</div>
 
-	<div id="ProgressBar">
+	<div id="ProgressBar" style="display:none;">
 	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque non odio vel tristique.
 		 Nulla ut lectus in odio condimentum volutpat. Quisque ultrices volutpat scelerisque.
 		  Nam vitae tristique lectus, sed viverra massa. Nullam gravida sollicitudin justo ac pellentesque.
@@ -204,7 +205,8 @@
 		var childImage =document.getElementById("childImage");
 		var childPseudo = document.getElementById("childPseudo");
 		var childCitation = document.getElementById("childCitation");
-		
+		var childRight = document.getElementById("childRight");
+
 		childImage.onload = showOnClickDetails;
 		closeSideBar.onclick = hideSideBar;
 		sideBar.style.display='none';
@@ -227,7 +229,7 @@
 
 		/*Loader*/
 		var progressBar = document.getElementById('ProgressBar');
-
+		progressBar.style.display="none";
 
 		window.addEventListener('resize',onWindowResize,false);
 
@@ -395,7 +397,7 @@
 										sep = document.createElement('span');
 										sep.id = "separator";
 										img = document.createElement('img');
-										img.src =  "images/DB/128-128/"+myObj[i].IDImage+".jpg";
+										img.src =  "images/64-64/"+myObj[i].IDImage+".jpg";
 										img.onclick = function()
 										{
 											onImageClick(myObj[i].IDPlace);

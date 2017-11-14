@@ -58,8 +58,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.rotateSpeed = 1.0;
 
 	// Set to false to disable panning
-	this.enablePan = false;
-	this.keyPanSpeed = 0.0;	// pixels moved per arrow key push
+	this.enablePan = true;
+	this.keyPanSpeed = 7.0;	// pixels moved per arrow key push
 
 	// Set to true to automatically rotate around the target
 	// If auto-rotate is enabled, you must call controls.update() in your animation loop
@@ -168,6 +168,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			// restrict radius to be between desired limits
 			spherical.radius = Math.max( scope.minDistance, Math.min( scope.maxDistance, spherical.radius ) );
+
+			// move target to panned location
+			scope.target.add( panOffset );
 
 			offset.setFromSpherical( spherical );
 
@@ -285,23 +288,86 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function rotateLeft( angle ) {
 
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && spherical.radius < 3500 ) {
-         sphericalDelta.theta -= angle/25;
-        }else{
-            sphericalDelta.theta -= angle;
-        }
-        
+		sphericalDelta.theta -= angle;
 
 	}
 
 	function rotateUp( angle ) {
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && spherical.radius < 3500 ) {
-		  sphericalDelta.phi -= angle/25;
-        }else{
-            sphericalDelta.phi -= angle;
-        }
+
+		sphericalDelta.phi -= angle;
 
 	}
+
+	var panLeft = function () {
+
+		var v = new THREE.Vector3();
+
+		return function panLeft( distance, objectMatrix ) {
+
+			v.setFromMatrixColumn( objectMatrix, 0 ); // get X column of objectMatrix
+			v.multiplyScalar( - distance );
+
+			panOffset.add( v );
+
+		};
+
+	}();
+
+	var panUp = function () {
+
+		var v = new THREE.Vector3();
+
+		return function panUp( distance, objectMatrix ) {
+
+			v.setFromMatrixColumn( objectMatrix, 1 ); // get Y column of objectMatrix
+			v.multiplyScalar( distance );
+
+			panOffset.add( v );
+
+		};
+
+	}();
+
+	// deltaX and deltaY are in pixels; right and down are positive
+	var pan = function () {
+
+		var offset = new THREE.Vector3();
+
+		return function pan( deltaX, deltaY ) {
+
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+			if ( scope.object instanceof THREE.PerspectiveCamera ) {
+
+				// perspective
+				var position = scope.object.position;
+				offset.copy( position ).sub( scope.target );
+				var targetDistance = offset.length();
+
+				// half of the fov is center to top of screen
+				targetDistance *= Math.tan( ( scope.object.fov / 2 ) * Math.PI / 180.0 );
+
+				// we actually don't use screenWidth, since perspective camera is fixed to screen height
+				panLeft( 2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix );
+				panUp( 2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix );
+
+			} else if ( scope.object instanceof THREE.OrthographicCamera ) {
+
+				// orthographic
+				panLeft( deltaX * ( scope.object.right - scope.object.left ) / scope.object.zoom / element.clientWidth, scope.object.matrix );
+				panUp( deltaY * ( scope.object.top - scope.object.bottom ) / scope.object.zoom / element.clientHeight, scope.object.matrix );
+
+			} else {
+
+				// camera neither orthographic nor perspective
+				console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
+				scope.enablePan = false;
+
+			}
+
+		};
+
+	}();
 
 	function dollyIn( dollyScale ) {
 
@@ -365,6 +431,14 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
+	function handleMouseDownPan( event ) {
+
+		//console.log( 'handleMouseDownPan' );
+
+		panStart.set( event.clientX, event.clientY );
+
+	}
+
 	function handleMouseMoveRotate( event ) {
 
 		//console.log( 'handleMouseMoveRotate' );
@@ -410,6 +484,22 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
+	function handleMouseMovePan( event ) {
+
+		//console.log( 'handleMouseMovePan' );
+
+		panEnd.set( event.clientX, event.clientY );
+
+		panDelta.subVectors( panEnd, panStart );
+
+		pan( panDelta.x, panDelta.y );
+
+		panStart.copy( panEnd );
+
+		scope.update();
+
+	}
+
 	function handleMouseUp( event ) {
 
 		// console.log( 'handleMouseUp' );
@@ -436,33 +526,32 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function handleKeyDown( event ) {
 
-	    //ARROW KEYS
-		switch(event.keyCode){
-			case 37:{
-				rotateLeft(0.075);
-			break;
-			}
+		//console.log( 'handleKeyDown' );
 
-			case 38:{
-				rotateUp(0.075);
-			break;
-			}
+		switch ( event.keyCode ) {
 
-			case 39:{
-				rotateLeft(-0.075);
-			break;
-			}
+			case scope.keys.UP:
+				pan( 0, scope.keyPanSpeed );
+				scope.update();
+				break;
 
-			case 40:{
-				rotateUp(-0.075);
-			break;
-			}
+			case scope.keys.BOTTOM:
+				pan( 0, - scope.keyPanSpeed );
+				scope.update();
+				break;
 
-			case "default":{
-			break;
-			}
+			case scope.keys.LEFT:
+				pan( scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+
+			case scope.keys.RIGHT:
+				pan( - scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+
 		}
-		scope.update();
+
 	}
 
 	function handleTouchStartRotate( event ) {
@@ -483,6 +572,14 @@ THREE.OrbitControls = function ( object, domElement ) {
 		var distance = Math.sqrt( dx * dx + dy * dy );
 
 		dollyStart.set( 0, distance );
+
+	}
+
+	function handleTouchStartPan( event ) {
+
+		//console.log( 'handleTouchStartPan' );
+
+		panStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 
 	}
 
@@ -536,6 +633,22 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
+	function handleTouchMovePan( event ) {
+
+		//console.log( 'handleTouchMovePan' );
+
+		panEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+
+		panDelta.subVectors( panEnd, panStart );
+
+		pan( panDelta.x, panDelta.y );
+
+		panStart.copy( panEnd );
+
+		scope.update();
+
+	}
+
 	function handleTouchEnd( event ) {
 
 		//console.log( 'handleTouchEnd' );
@@ -577,7 +690,12 @@ THREE.OrbitControls = function ( object, domElement ) {
 			case scope.mouseButtons.PAN:
 
 				if ( scope.enablePan === false ) return;
-			break;
+
+				handleMouseDownPan( event );
+
+				state = STATE.PAN;
+
+				break;
 
 		}
 
@@ -619,6 +737,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 			case STATE.PAN:
 
 				if ( scope.enablePan === false ) return;
+
+				handleMouseMovePan( event );
+
 				break;
 
 		}
@@ -626,7 +747,35 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onKeyPress( event ) {
-        //WASD AND +/- FOR ZOOMING
+
+		//ARROW KEYS
+		switch(event.keyCode){
+			case scope.keys.LEFT:{
+				rotateLeft(0.075);
+			break;
+			}
+
+			case scope.keys.UP:{
+				rotateUp(0.075);
+			break;
+			}
+
+			case scope.keys.RIGHT:{
+				rotateLeft(-0.075);
+			break;
+			}
+
+			case scope.keys.BOTTOM:{
+				rotateUp(-0.075);
+			break;
+			}
+
+			case "default":{
+			break;
+			}
+		}
+
+		//WASD AND +/- FOR ZOOMING
 		switch(event.charCode){
 			case scope.charcodes.A:{
 				rotateLeft(0.075);
@@ -664,8 +813,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		}
 		scope.update();
+
 	}
-    
+
 
 	function onMouseUp( event ) {
 
@@ -698,7 +848,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function onKeyDown( event ) {
 
-		if ( scope.enabled === false || scope.enableKeys === false) return;
+		if ( scope.enabled === false || scope.enableKeys === false || scope.enablePan === false ) return;
 
 		handleKeyDown( event );
 
@@ -733,6 +883,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 			case 3: // three-fingered touch: pan
 
 				if ( scope.enablePan === false ) return;
+
+				handleTouchStartPan( event );
+
+				state = STATE.TOUCH_PAN;
+
 				break;
 
 			default:
@@ -779,7 +934,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 			case 3: // three-fingered touch: pan
 
 				if ( scope.enablePan === false ) return;
-				
+				if ( state !== STATE.TOUCH_PAN ) return; // is this needed?...
+
+				handleTouchMovePan( event );
+
 				break;
 
 			default:

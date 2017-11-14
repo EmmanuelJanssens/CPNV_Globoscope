@@ -15,8 +15,9 @@ function loadData(scene,canvContainer,loadSpinner)
     xmlhttp = new XMLHttpRequest();
 
     //afficher un element de chargement 
-    showSearchButton.style.display = "none";
-    canvContainer.style.display = "none";
+    showSearchButton.style.display = "block";
+    canvContainer.style.display = "block";
+
     var loadValue = document.getElementById('progressValue');
     var loadStatus = document.getElementById('loadingState');
 
@@ -45,7 +46,7 @@ function loadData(scene,canvContainer,loadSpinner)
             data = JSON.parse(this.responseText);
 
             //Plane de base
-            var plane = new THREE.PlaneBufferGeometry(100,125);   
+            var plane = new THREE.PlaneGeometry(100,125);   
             var material = new THREE.MeshBasicMaterial( {  color: 0xffffff });
             
             var nbImagesLat = [0,0,0,0,2,2,2,2,4,4,4,6,6,6,6,8,8,8,8,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,8,8,8,8,6,6,6,6,4,4,4,2,2,2,2];
@@ -85,8 +86,8 @@ function loadData(scene,canvContainer,loadSpinner)
                 var geometry = new THREE.SphereGeometry( rayon - 15, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
-                mesh.rotation.z = -Math.PI;
-                mesh.rotation.y = Math.PI/1.7;
+                mesh.rotateZ(Math.PI);
+                mesh.rotateY(-Math.PI/1.7);
                 scene.add( mesh );
             } );
             
@@ -98,11 +99,9 @@ function loadData(scene,canvContainer,loadSpinner)
                 //charger une image 
                 if(data[x].ImageOK != 0)
                 {
-                    var image = new Image();
                     //afficher le canvas lorsque la dernière image est chargée
                     
                     file ="images/64-64/"+data[x].IDImage+".jpg";                   
-                    image.src = file;
                     texture =  textureLoader.load( file ,function()
                     {
                         imageLoaded++;
@@ -110,8 +109,9 @@ function loadData(scene,canvContainer,loadSpinner)
                         
                         if(imageLoaded >= totalImages-200)
                         {
-                            canvContainer.className= "w3-animate-opacity";
-                            showCanvas(canvContainer,loadSpinner);        
+                            canvContainer.style.display = "block";
+                            loadSpinner.style.display = "none";
+                            showSearchButton.style.display = "block";   
                         } 
                     });
 
@@ -155,9 +155,7 @@ function loadData(scene,canvContainer,loadSpinner)
 }
 function showCanvas(canvContainer,loadSpinner)
 {
-    canvContainer.style.display = "block";
-    loadSpinner.style.display = "none";
-    showSearchButton.style.display = "block";
+
     
 }
 
