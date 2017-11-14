@@ -148,7 +148,6 @@ function loadData(scene,canvContainer,loadSpinner)
 
     xmlhttp.open("POST", "loader.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.setRequestHeader("Content-Length", "application/x-www-form-urlencoded");
     
     xmlhttp.send("x=" + dbParam);    
 

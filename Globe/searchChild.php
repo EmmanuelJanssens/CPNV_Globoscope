@@ -3,10 +3,10 @@
     function getBD()
     {
         //Connexion sur hostinger
-        //$connexion = new mysqli("localhost", "id3116159_admingloboscope", "flocon123", "id3116159_globoscope");
+        $connexion = new mysqli("localhost", "id3116159_admingloboscope", "flocon123", "id3116159_globoscope");
 
         //Connexion en local
-        $connexion = new mysqli("localhost", "root", "", "globoscope");  
+        //$connexion = new mysqli("localhost", "root", "", "globoscope");  
         return $connexion;
     }
 

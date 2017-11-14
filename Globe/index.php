@@ -25,20 +25,19 @@
 			<p id="closeHelp">X</p>
 			<div id="direction">
 				<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
-				<p> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
+				<p id="aideDeplacementSouris"> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
 			</div>
 			<div id="Aidereste" class="Aide">
-				<p>+ et - : pour zoomer et dézoomer</p>
+				<p id="aideZoom">+ et - : pour zoomer et dézoomer</p>
 				<hr></hr>
-				<p>Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
+				<p id="aideAgrandirImage">Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
 				<hr></hr>
-				<p>Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
+				<p id="aideRecherche">Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
 			</div>
 			<div id="languageSelect">
-				<span id="FR">FR</span>/<span id="EN">EN</span>
+				<span id="FR" onclick="aideFr()">FR</span>/<span id="EN" onclick="aideAng()">EN</span>
 			</div>
 		</div>
-
 	</div>
 	
 	<div id="sideBar">
@@ -232,6 +231,7 @@
 		progressBar.style.display="none";
 
 		window.addEventListener('resize',onWindowResize,false);
+		window.addEventListener("keydown", closeSideBarEsc);
 
 		document.onmousedown = onMouseClick;
 		document.onmousemove = onMouseMove;
@@ -243,7 +243,53 @@
 			showSearchButton.style.display = 'block';
 		}
 		container.appendChild(renderer.domElement);
+        
+		function aideFr()
+		{
+            var deplacementSouris = document.getElementById('aideDeplacementSouris');
+			deplacementSouris.textContent = "pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez";
+			
+            var aideZoom = document.getElementById('aideZoom');
+			aideZoom.textContent = "+ et - : pour zoomer et dézoomer";
+			
+            var aideAgrandirImage = document.getElementById('aideAgrandirImage');
+			aideAgrandirImage.textContent = "Cliquez sur l'image pour l'agrandir et afficher ses informations";
+			
+            var aideRecherche = document.getElementById('aideRecherche');
+            aideRecherche.textContent = "Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image";
+        }
+		function aideAng()
+		{
+            var deplacementSouris = document.getElementById('aideDeplacementSouris');
+			deplacementSouris.textContent = "Drag the mouse arround to explore the globe";
+			
+            var aideZoom = document.getElementById('aideZoom');
+			aideZoom.textContent = "+ and - : to zoom in and zoom out";
+			
+            var aideAgrandirImage = document.getElementById('aideAgrandirImage');
+			aideAgrandirImage.textContent = "Click on the picture to enlarge and display the informations";
+			
+            var aideRecherche = document.getElementById('aideRecherche');
+            aideRecherche.textContent = "Write the nickname in the research tool to find your picture";            
+        }
 
+		function closeSideBarEsc(e)
+		{
+			if(sideBar.style.display != 'none')
+			{
+				if(e.keyCode == 27 )
+				{
+					hideSideBar();
+				}
+			}
+			if(helpDiv.style.display != 'none')
+			{
+				if(e.keyCode == 27 )
+				{
+					hideSideBar();
+				}
+			}
+		}
 		function showSearch()
 		{
 			SearchBox.style.display='flex';

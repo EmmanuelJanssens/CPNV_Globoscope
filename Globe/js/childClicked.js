@@ -22,15 +22,16 @@ function onImageClick(x)
             {
                 //convertit les données reçues depuis le fichier PHP correspondent (JsonEncode)
                 myObj = JSON.parse(this.responseText);
-
+                console.log(this.responseText);
+                console.log(myObj);
                 //Si l'image existe
                 if(myObj[0].ImageOK != 0)
                 {
                     var details =  document.getElementById("onClickDetails").childNodes;
                     childImage.src = "images/400-500/"+myObj[0].IDImage+".jpg";
-                    childPseudo.innerHTML = myObj[0].Pseudo;
-                    childCitation.innerHTML =  myObj[0].Slogan;
-                    childRight.innerHTML = myObj[0].Droit;
+                    childPseudo.textContent = myObj[0].Pseudo;
+                    childCitation.textContent =  myObj[0].Slogan;
+                    childRight.textContent = myObj[0].Droit;
                 }
             }
         }
