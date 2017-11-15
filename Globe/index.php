@@ -255,7 +255,7 @@
 			return tweenVector3;
 
 		}
-		
+
 		function aideFr()
 		{
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
@@ -297,7 +297,7 @@
 			{
 				if(e.keyCode == 27 )
 				{
-					hideSideBar();
+					closeHelp();
 				}
 			}
 			if(	SearchBox.style.display != 'none')
@@ -346,12 +346,13 @@
 			searchChild(camera,scene);
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				hideSearch();
+				SearchBox.style.display = 'none';
 				showSearchButton.style.display = 'none';
 				helpButton.style.display = 'none';			
 			}
 			else
 			{
+				SearchBox.style.display = 'none';
 				showSearchButton.style.display = 'block';
 			}
 			
