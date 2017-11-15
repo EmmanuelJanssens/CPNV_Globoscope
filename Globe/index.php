@@ -483,7 +483,14 @@
 												
 												easing : TWEEN.Easing.Cubic.InOut,
 											});
-											onImageClick(myObj[i].IDPlace);
+											if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+											{
+
+											}
+											else
+											{
+												onImageClick(myObj[i].IDPlace);
+											}
 											hideSearch();
 										}
 										pseudo = document.createElement('p');

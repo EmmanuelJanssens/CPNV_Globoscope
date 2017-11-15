@@ -54,7 +54,14 @@ function searchChild(camera,scene)
                                 
                                 easing : TWEEN.Easing.Cubic.InOut,
                             });
-                            onImageClick(myObj[i].IDPlace);
+                            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+                            {
+                                hideSideBar();
+                            }
+                            else
+                            {
+                                onImageClick(myObj[i].IDPlace);
+                            }
                         }
 
                         searchPseudo.innerHTML = myObj[i].Pseudo;
