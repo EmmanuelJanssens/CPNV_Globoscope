@@ -4,7 +4,6 @@
 		<title>Globoscope</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<meta http-equiv="Cache-control" content="no-cache">
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<link rel="stylesheet" href="css/style.css?d=<?php echo time(); ?>"> 	
 		<link rel="stylesheet" href="css/sideBarStyle.css?d=<?php echo time(); ?>"> 	
@@ -69,23 +68,6 @@
 		</div>
 	</div>
 
-	<div id="ProgressBar" style="display:none;">
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque non odio vel tristique.
-		 Nulla ut lectus in odio condimentum volutpat. Quisque ultrices volutpat scelerisque.
-		  Nam vitae tristique lectus, sed viverra massa. Nullam gravida sollicitudin justo ac pellentesque.
-		   Ut orci orci, aliquet at ipsum in, varius dictum est. Maecenas hendrerit malesuada velit ac sodales.
-			Proin aliquam eros sed magna blandit, ac facilisis mauris molestie. Duis condimentum, tortor sit amet condimentum varius,
-			diam lectus pharetra est, id finibus mauris ipsum eget massa. Aliquam vestibulum, sem vitae varius lobortis, quam neque vulputate nisi, 
-			sed molestie eros elit non augue. Integer faucibus, lacus a finibus bibendum, lectus augue congue magna, hendrerit bibendum mauris lacus vitae mi. 
-			Etiam ultricies ut magna vitae pellentesque. Nulla ac massa orci. Nunc fermentum, magna ac finibus eleifend, nisl ligula facilisis lorem, et bibendum ante quam quis quam. 
-			Aliquam porta urna vel neque convallis accumsan. Fusce vel iaculis sem. 
-			</p>		   
-	<p id="loadingState">
-	</p>
-	<span id="progressBackground">
-			<span  id="progressValue"></span>             
-	</span>
-	</div>
 
 
 	<script src= "js/three.min.js"></script>
@@ -94,6 +76,7 @@
 	<script src ="js/loader.js"></script>
 	<script src="js/searchChild.js"></script>
 	<script src="js/childClicked.js"></script>
+	<script src="js/Tween.js"></script>
 
 	<script type="application/x-glsl" id="sky-vertex">  
 		varying vec2 vUV;
@@ -122,6 +105,8 @@
 		var rendererW = window.innerWidth;
 		var rendererH = window.innerHeight;
 		var camera = new THREE.PerspectiveCamera( 75, rendererW/rendererH, 0.1, 50000 );
+		var camSpherical = new THREE.Spherical();
+		var camPos = new THREE.Vector3();
 		var renderer = new THREE.WebGLRenderer();
 		var controls =  new THREE.OrbitControls(camera,renderer.domElement);
 		var raycaster = new THREE.Raycaster();
@@ -165,8 +150,7 @@
 		skyBox.eulerOrder = 'XZY';  
 		skyBox.renderDepth = 1000.0;  
 		scene.add(skyBox);  
-	
-
+		
 		/**Fin initialisation three JS */
 		var container = document.createElement('div');
 		container.id = "CanvContainer";
@@ -227,8 +211,6 @@
 		closeHelpDiv.onclick= closeHelp;
 
 		/*Loader*/
-		var progressBar = document.getElementById('ProgressBar');
-		progressBar.style.display="none";
 
 		window.addEventListener('resize',onWindowResize,false);
 		window.addEventListener("keydown", closeSideBarEsc);
@@ -237,13 +219,43 @@
 		document.onmousemove = onMouseMove;
 		document.body.appendChild(container);
 
-		renderer.domElement.onclick = function()
-		{
-			SearchBox.style.display = "none";
-			showSearchButton.style.display = 'block';
-		}
+
 		container.appendChild(renderer.domElement);
-        
+
+		loadData(scene,container);
+		animate();
+		//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
+		function animateVector3(vectorToAnimate, target, options)
+		{
+
+			options = options || {};
+
+			// get targets from options or set to defaults
+			var to = target || THREE.Vector3(),
+				easing = options.easing || TWEEN.Easing.Quadratic.In,
+				duration = options.duration || 2000;
+
+			// create the tween
+			var tweenVector3 = new TWEEN.Tween(vectorToAnimate)
+				.to({ x: to.x, y: to.y, z: to.z, }, duration)
+				.easing(easing)
+				.onUpdate(function(d) {
+					if(options.update){ 
+						options.update(d);
+					}
+				})
+				.onComplete(function(){
+				if(options.callback) options.callback();
+				});
+
+			// start the tween
+			tweenVector3.start();
+
+			// return the tween in case we want to manipulate it later on
+			return tweenVector3;
+
+		}
+		
 		function aideFr()
 		{
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
@@ -272,7 +284,6 @@
             var aideRecherche = document.getElementById('aideRecherche');
             aideRecherche.textContent = "Write the nickname in the research tool to find your picture";            
         }
-
 		function closeSideBarEsc(e)
 		{
 			if(sideBar.style.display != 'none')
@@ -289,6 +300,13 @@
 					hideSideBar();
 				}
 			}
+			if(	SearchBox.style.display != 'none')
+			{
+				if(e.keyCode == 27 )
+				{
+					hideSearch();
+				}				
+			}
 		}
 		function showSearch()
 		{
@@ -302,40 +320,41 @@
 			SearchBox.style.display = 'none';
 			showSearchButton.style.display = 'block';
 		}
-		function mobileDisplay(disp)
-		{
-			showSearchButton.style.display = disp;
-			helpButton.style.display = disp;		
-		}
 		function showHelp()
 		{
 			helpDiv.style.display = 'block';
 			helpDiv.className = "w3-animate-left";
-			helpButton.style.display = 'none';
 
-			if(window.innerWidth <= 480)
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 			{
+				helpButton.style.display = 'none';
 				SearchBox.style.display = 'none';
-				mobileDisplay('none');
+				showSearchButton.style.display ='none';
 			}
 		}
 		function closeHelp()
 		{
 			helpDiv.style.display = 'none';
-			helpButton.style.display = 'block';
-			if(window.innerWidth <= 480)
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				mobileDisplay('block');			
+				helpButton.style.display = 'block';
+				showSearchButton.style.display ='block';
 			}			
 		}
 		function showSearchResults()
 		{
-			searchChild();
-
-			if(window.innerWidth > 480)
+			searchChild(camera,scene);
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+			{
+				hideSearch();
+				showSearchButton.style.display = 'none';
+				helpButton.style.display = 'none';			
+			}
+			else
+			{
 				showSearchButton.style.display = 'block';
+			}
 			
-			SearchBox.style.display = 'none';
 			onClickDetails.style.display = 'none';
 			onSearchDetails.style.display = 'flex';
 
@@ -350,6 +369,7 @@
 		}
 		function showOnClickDetails()
 		{
+
 			onSearchDetails.style.display = 'none';
 			onClickDetails.style.display = 'flex';
 
@@ -364,12 +384,13 @@
 		}
 		function hideSideBar()
 		{
-			showSearchButton.style.display = 'block';
 			sideBar.style.display='none';
 			sideBar.className = "";
-			if(window.innerWidth <= 480)
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				mobileDisplay('block');				
+				document.onmousedown = onMouseClick;
+				helpButton.style.display = 'block';
+				showSearchButton.style.display = 'block';
 			}
 		}
 		function showSideBar()
@@ -380,9 +401,11 @@
 			sideBar.className = "w3-animate-right";
 			sideBar.style.display='block';
 
-			if(window.innerWidth <= 480)
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				mobileDisplay('none');
+				document.onmousedown = null;
+				helpButton.style.display = 'none';
+				showSearchButton.style.display = 'none';
 			}
 
 		}
@@ -410,6 +433,7 @@
 
 			
 			xmlSearch.abort();
+
 			xmlSearch.onreadystatechange = function()
 			{
 				if(this.readyState==4 && this.status == 0)
@@ -443,12 +467,23 @@
 										sep = document.createElement('span');
 										sep.id = "separator";
 										img = document.createElement('img');
-										img.src =  "images/64-64/"+myObj[i].IDImage+".jpg";
+										img.src =  "images/64-64/"+myObj[i].IDImage+".png";
 										img.onclick = function()
 										{
+											var plane = scene.getObjectByName( myObj[i].IDPlace );
+
+
+											var target = new THREE.Vector3((plane.position.x) * (-1) * 1.1  ,(plane.position.y) * (-1) * 1.1 ,plane.position.z * 1.1); // create on init
+											
+											//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
+											animateVector3(camera.position, target, {
+												
+												duration: 2000, 
+												
+												easing : TWEEN.Easing.Cubic.InOut,
+											});
 											onImageClick(myObj[i].IDPlace);
-											SearchBox.style.display = 'none';
-											showSearchButton.style.display = 'none';
+											hideSearch();
 										}
 										pseudo = document.createElement('p');
 										pseudo.innerHTML =  myObj[i].Pseudo;
@@ -481,20 +516,8 @@
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY / rendererH) * 2 + 1;		
-
-			if(window.innerWidth < 480)
-			{
-				if(sideBar.style.display != "none"  || helpDiv.style.display != "none"	||	SearchBox.style.display !="none")
- 
-				{
-					showSearchButton.style.display = "none";
-				}
-				else
-				{
-					showSearchButton.style.display = "block";
-				}
-			}
 		}
+
 		function onMouseClick( event ) 
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
@@ -510,11 +533,9 @@
 				
 					if(intersects.length > 0)
 					{
-						if(intersects[0].object.name != 0 && intersects[0].object.type =="VRAI")
+						if(intersects[0].object.type =="VRAI")
 						{
 							onImageClick(intersects[ 0 ].object.name);
-							SearchBox.style.display = 'none';
-							showSearchButton.style.display = 'block';
 						}
 					}
 				break;
@@ -527,6 +548,7 @@
 		function animate() 
 		{
 			requestAnimationFrame( animate );
+			TWEEN.update();
 			controls.update();
 			render();
 		}
@@ -547,8 +569,7 @@
 			}
 			renderer.render( scene, camera );
 		}
-		loadData(scene,container,progressBar);
-		animate();
+
 
 	</script>
 

@@ -3,7 +3,7 @@
     display: none;
     position: absolute;
     top:0px;
-    right: 2px;
+    right: 0px;
 
     width: 100%;
     height: 100%;
@@ -12,35 +12,34 @@
     border-radius: 25px;
     border-left: 16px solid #bcdc53;  
     
-    max-width: 500px;
+    max-width: 600px;
+    max-height: 800px;
 }
 
 #onClickDetails
 {
     display: flex;
-    flex-direction: column;  
+    flex-flow: column;
+   
+    justify-content: space-evenly;
+    
     align-items: center;
     text-align: center;
-    
-    padding: 10%;
-    
+      
     width: 100%;
     height: 100%;
-    
+ 
 }
 
 #onClickDetails img
 {
- 
-    margin:auto;
-    border-radius: 20px;
-    
+     
+    border-radius: 20px;  
     min-width: auto;
     min-height: 150px;
     
-    height: 60%;  
-    width: auto;  
-      
+    width: 250px;
+    height: auto;      
 }
 #closeSideBar
 {
@@ -51,10 +50,17 @@
     font-size: 1.7em;
     
     position: absolute;
-    top: -15px;
-    right: 20px;
+    top: -25px;
+    right: 15px;
 }
 
+#onClickDetails #separator
+{
+    height: 4px;
+    width: 90%;
+    
+    background-color:  #bcdc53;
+}
 
 #description
 {
@@ -65,39 +71,47 @@
 {
     #sideBar
     {
-        top: 20%;
-        width: 30%;
-        height: 70%;
+        top: 10%;
+        width: 500px;
+        height: 700px;
         background-color: rgba(255, 255, 255, 1);
-        
     }
-    
     #onClickDetails img
     {
-        margin:auto;
-        min-width: 100px;
-        width: 60%;
+        
+        width: 100%;
         height: auto;
+        
+        min-width: 100px;
+
+        max-width: 400px;
+        max-height: 500px;
     }
 }
-@media screen and (max-height: 300px) 
+@media screen and (max-height: 400px) 
 {
     #sideBar
     {
+        top: 0%;
+        left:0%;
         min-height: 350px;
-        padding: 0px;
-        margin: 0px;
+        width: 100%;
+        height: 100%;   
     }
     #onClickDetails
     {
-        flex-direction: row;
-        justify-content: center;
-        
-        padding: 50px;
+        flex-flow: row;
     }
-    hr
+    #onClickDetails img
+    {
+        margin: 0px;
+        height: 300px;
+        width: auto;
+    }
+    #onClickDetails #separator
     {
         width: 4px;
-        height: 100%;
+        height: 80%;
     }
+
 }

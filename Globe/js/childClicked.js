@@ -22,8 +22,6 @@ function onImageClick(x)
             {
                 //convertit les données reçues depuis le fichier PHP correspondent (JsonEncode)
                 myObj = JSON.parse(this.responseText);
-                console.log(this.responseText);
-                console.log(myObj);
                 //Si l'image existe
                 if(myObj[0].ImageOK != 0)
                 {

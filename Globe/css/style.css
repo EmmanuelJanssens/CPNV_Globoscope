@@ -38,14 +38,6 @@ body
     100% { transform: rotate(360deg); }
 }
 
-#progressBar
-{
-    background-color: #bcdc53!important;
-    
-}
-
-    padding-top: 30px;
-}
 
 .Aide {
     color: white;

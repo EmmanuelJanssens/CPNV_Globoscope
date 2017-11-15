@@ -1,4 +1,4 @@
-function searchChild()
+function searchChild(camera,scene)
 {
     var objJSON,dbParam,xmlhttp,myObj;
 
@@ -39,9 +39,11 @@ function searchChild()
                         var searchPseudo = document.createElement('p');
 
                         img.id=myObj[i].IDImage;
-                        img.src = "images/64-64/"+myObj[i].IDImage+".jpg"
+                        img.src = "images/64-64/"+myObj[i].IDImage+".png"
                         img.onclick = function()
                         {
+                            var position = scene.getObjectByName( myObj[i].IDPlace );
+                            console.log(position.name + " " + position.position.x +  position.position.y +position.position.z);
                             onImageClick(myObj[i].IDPlace);
                         }
 

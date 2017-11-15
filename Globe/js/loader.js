@@ -1,8 +1,4 @@
-
-
-var imageLoaded = 0;
-            
-function loadData(scene,canvContainer,loadSpinner)
+function loadData(scene,canvContainer)
 {
     var searchObj, dbParam, xmlhttp, data, x = "";
     textureLoader = new THREE.TextureLoader();
@@ -18,30 +14,11 @@ function loadData(scene,canvContainer,loadSpinner)
     showSearchButton.style.display = "block";
     canvContainer.style.display = "block";
 
-    var loadValue = document.getElementById('progressValue');
-    var loadStatus = document.getElementById('loadingState');
-
+    var index = 0;
     xmlhttp.onreadystatechange = function() 
     {
-        if(this.readyState == 0 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "En attente";            
-        }
-        if(this.readyState == 1 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Connecté";            
-        }
-        else if(this.readyState == 2 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Recupération des données";            
-        }
-        else if(this.readyState == 2 && this.status == 200)
-        {
-            loadStatus.innerHTML  = "Chargement des données";            
-        }
-        else if (this.readyState == 4 && this.status == 200) 
+        if(this.readyState == 4 && this.status == 200) 
         {            
-            loadStatus.innerHTML  = "Chargemement des Images";
             //convertir la requète php dans loader.php qui à été encodé pour pouvoir lire en JSON
             data = JSON.parse(this.responseText);
 
@@ -51,98 +28,79 @@ function loadData(scene,canvContainer,loadSpinner)
             
             var nbImagesLat = [0,0,0,0,2,2,2,2,4,4,4,6,6,6,6,8,8,8,8,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,8,8,8,8,6,6,6,6,4,4,4,2,2,2,2];
 
-            //coordonées et orientation
-            var _x,_y,_z,orientation,zero;
+            //coordonées
+            var _x,_y,_z;
             var long,lat;
-            orientation = new THREE.Vector3();
-            zero = new THREE.Vector3();
 
             var cellW = 100;
             var cellH = 125;
 
-            var originalSpacing =1.05;    
+            var originalSpacing =1.1;    
             var xSpacing = originalSpacing;
             var ySpacing = originalSpacing;        
            
             var totalMeridians = 12;
             var meridianWidth = 12;
             var meridianHeight = 54;
-
-            var meridianCounter = 0;
-            var currentMeridian = 0;
-
             var rayon =  (cellW*originalSpacing*meridianWidth*totalMeridians)/(2*Math.PI);
             
-            var i = 0;
-            var totalImages = 0;
-            
-            for(i in data)
-            {
-                if(data[i].ImageOK == "VRAI")
-                    totalImages++;
-            }
+            var Spherical = new THREE.Spherical();
+            var spherePos = new THREE.Vector3();
+
+
             var TextureLoader = new THREE.TextureLoader();
-            TextureLoader.load( 'images/earth.jpg', function ( texture ) {
+
+            var angles = new Array();
+            TextureLoader.load( 'images/earth.jpg', function ( texture )
+            {
                 var geometry = new THREE.SphereGeometry( rayon - 15, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
                 var mesh = new THREE.Mesh( geometry, material );
                 mesh.rotateZ(Math.PI);
                 mesh.rotateY(-Math.PI/1.7);
                 scene.add( mesh );
-            } );
-            
-            var Spherical = new THREE.Spherical();
-            var spherePos = new THREE.Vector3();
-
-            for(x = 0; x < data.length;x++)
-            {      
-                //charger une image 
-                if(data[x].ImageOK != 0)
-                {
-                    //afficher le canvas lorsque la dernière image est chargée
-                    
-                    file ="images/64-64/"+data[x].IDImage+".jpg";                   
-                    texture =  textureLoader.load( file ,function()
+                console.log(rayon);
+                for(x = 0; x < data.length;x++)
+                {      
+                    //charger une image 
+                    if(data[x].ImageOK != 0)
                     {
-                        imageLoaded++;
-                        loadValue.style.width = (imageLoaded/totalImages)*100+"%";   
+                        index++;
+                        //afficher le canvas lorsque la dernière image est chargée
                         
-                        if(imageLoaded >= totalImages-200)
-                        {
-                            canvContainer.style.display = "block";
-                            loadSpinner.style.display = "none";
-                            showSearchButton.style.display = "block";   
-                        } 
-                    });
+                        file ="images/64-64/"+data[x].IDImage+".png";                   
+                        texture =  textureLoader.load( file);
+                        //Inversion des textures --
+                        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                        texture.repeat.x = -1;
+                        texture.repeat.y = -1;
 
-                    //Inversion des textures --
-                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                    texture.repeat.x = -1;
-                    texture.repeat.y = -1;
-                    
-                    material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );    
-                    
-                    //creer le plane 
-                    mesh = new THREE.Mesh( plane, material );
-                    
-                    //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
-                    long = (-( (data[x].mer ) * cellW * meridianWidth * originalSpacing + (data[x].lon-7)  * cellW * 12/nbImagesLat[data[x].lat] * (xSpacing))/rayon);
-                    lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
-                
-                    Spherical.set(rayon,lat,long);
-                    spherePos.setFromSpherical(Spherical);
-                    mesh.lookAt(spherePos);                    
-                    mesh.position.set(spherePos.x,spherePos.y,spherePos.z);
-                    
-                    //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
-                    mesh.name = data[x].IDPlace;
-                    mesh.type = data[x].ImageOK;
-                    scene.add( mesh );  
-                    
-                }          
-            }
-            scene.rotation.z = Math.PI;
-            
+                        material = new THREE.MeshBasicMaterial( {  color: 0xffffff,map: texture } );    
+
+                        //creer le plane 
+                        mesh = new THREE.Mesh( plane, material );
+
+                        //https://stackoverflow.com/questions/12732590/how-map-2d-grid-points-x-y-onto-sphere-as-3d-points-x-y-z
+                        long = (-( (data[x].mer ) * cellW * meridianWidth * originalSpacing + (data[x].lon-7)  * cellW * 12/nbImagesLat[data[x].lat] * (xSpacing))/rayon);
+                        lat  = ( ( cellH * meridianHeight * ySpacing + data[x].lat *cellH *originalSpacing ) /rayon) + Math.PI/30  ;
+
+                        Spherical.set(rayon,lat,long);
+                        spherePos.setFromSpherical(Spherical);
+                        mesh.lookAt(spherePos);                    
+                        mesh.position.set(spherePos.x,spherePos.y,spherePos.z);
+
+                        //nomer les planes pour pouvoir réutiliser les données dans la recherche d'image
+                        mesh.name = data[x].IDPlace;
+                        mesh.type = data[x].ImageOK;
+                        mesh.id = index;
+                        angles.push([lat,long]);
+                        mesh.userData = angles;
+
+                        scene.add( mesh );                      
+                    }          
+                }
+                scene.rotation.z = Math.PI;
+            });         
         }
     };
 
@@ -151,10 +109,5 @@ function loadData(scene,canvContainer,loadSpinner)
     
     xmlhttp.send("x=" + dbParam);    
 
-}
-function showCanvas(canvContainer,loadSpinner)
-{
-
-    
 }
 
