@@ -42,8 +42,18 @@ function searchChild(camera,scene)
                         img.src = "images/64-64/"+myObj[i].IDImage+".png"
                         img.onclick = function()
                         {
-                            var position = scene.getObjectByName( myObj[i].IDPlace );
-                            console.log(position.name + " " + position.position.x +  position.position.y +position.position.z);
+                            var plane = scene.getObjectByName( myObj[i].IDPlace );
+                            
+                            
+                            var target = new THREE.Vector3((plane.position.x) * (-1) * 1.1  ,(plane.position.y) * (-1) * 1.1 ,plane.position.z * 1.1); // create on init
+                            
+                            //https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
+                            animateVector3(camera.position, target, {
+                                
+                                duration: 2000, 
+                                
+                                easing : TWEEN.Easing.Cubic.InOut,
+                            });
                             onImageClick(myObj[i].IDPlace);
                         }
 
