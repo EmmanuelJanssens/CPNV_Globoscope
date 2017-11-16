@@ -35,6 +35,32 @@
     top: -15px;
     right: 20px;
 }
+#closeCredit
+{
+    cursor: pointer;
+    color:#bcdc53;
+    
+    font-weight: bold;
+    font-size: 1.7em;
+    
+    position: absolute;
+    top: -15px;
+    right: 20px;
+}
+#creditBox img
+{
+    border-radius: 15px;
+}
+#creditBox{
+    display: none;
+    text-align: center;
+}
+
+#imageGroupe{
+    width:100%;
+    height: auto;
+    align-items: center;
+}
 #box
 {
     
@@ -70,7 +96,7 @@
     text-align: justify;
 }
 
-#languageSelect #FR,#EN
+.languageSelect #FR,#EN,#creditSpan
 {
     cursor: pointer;
     text-decoration: underline;
@@ -102,7 +128,6 @@
     #helpButton:hover
     {
         border-radius: 100%;
-        background-color:rgba(255,255,255,.2);
-        
+        background-color:rgba(255,255,255,.2);     
     }
 }

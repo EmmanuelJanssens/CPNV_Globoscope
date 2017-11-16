@@ -17,25 +17,39 @@
 	<body>
 	<span><img id="helpButton" src="images/questionMark.png"></span>
 	<div id="Help">
-		<div id="box">
+	<div id="box">
+		<div id="header">
+			<h3 class="aide" a href="">Help</h3>
+		</div>
+		<p id="closeHelp">X</p>
+		<div id="direction">
+			<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
+			<p id="aideDeplacementSouris"> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
+		</div>
+		<div id="Aidereste" class="Aide">
+			<p id="aideZoom">+ et - : pour zoomer et dézoomer</p>
+			<hr></hr>
+			<p id="aideAgrandirImage">Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
+			<hr></hr>
+			<p id="aideRecherche">Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
+		</div>
+		<div class="languageSelect">
+			<span id="FR" onclick="aideFr()">FR</span>/<span id="EN" onclick="aideAng()">EN</span>
+			<span id="creditSpan" onclick="credit()">Credits</span>
+		</div>
+   	</div>
+	<div id="creditBox">
 			<div id="header">
-				<h3 class="aide" a href="">Help</h3>
+				<h3 class="credit" a href="">Credit</h3>            
 			</div>
-			<p id="closeHelp">X</p>
-			<div id="direction">
-				<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
-				<p id="aideDeplacementSouris"> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
+			<p id="closeCredit">X</p>
+			<img id="imageGroupe" src="images/photoGroupe" alt="Development Group"> 
+			<div id="Groupe">
+				<p id="groupeMembresContenu"></p>
 			</div>
-			<div id="Aidereste" class="Aide">
-				<p id="aideZoom">+ et - : pour zoomer et dézoomer</p>
-				<hr></hr>
-				<p id="aideAgrandirImage">Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
-				<hr></hr>
-				<p id="aideRecherche">Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
-			</div>
-			<div id="languageSelect">
-				<span id="FR" onclick="aideFr()">FR</span>/<span id="EN" onclick="aideAng()">EN</span>
-			</div>
+			<div class="languageSelect">
+				<span id="creditSpan" onclick="aideFr()">Help</span>
+			</div>            
 		</div>
 	</div>
 	
@@ -164,7 +178,6 @@
 
 		var xmlSearch;
 		var SearchTextBox = document.getElementById('searchText');
-		SearchTextBox.oninput = OnWriting;
 
 		SearchTextBox.onfocus = function()
 		{
@@ -217,13 +230,15 @@
 
 		document.onmousedown = onMouseClick;
 		document.onmousemove = onMouseMove;
+		document.onkeydown = checkEnter;
 		document.body.appendChild(container);
-
+		
 
 		container.appendChild(renderer.domElement);
 
 		loadData(scene,container);
 		animate();
+		
 		//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
 		function animateVector3(vectorToAnimate, target, options)
 		{
@@ -258,6 +273,10 @@
 
 		function aideFr()
 		{
+            var credit = document.getElementById('creditBox');
+            credit.style.display = 'none';
+            var box = document.getElementById('box');
+            box.style.display = 'flex';
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
 			deplacementSouris.textContent = "pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez";
 			
@@ -272,6 +291,9 @@
         }
 		function aideAng()
 		{
+            var credit = document.getElementById('creditBox');
+            credit.style.display = 'none';
+
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
 			deplacementSouris.textContent = "Drag the mouse arround to explore the globe";
 			
@@ -283,6 +305,17 @@
 			
             var aideRecherche = document.getElementById('aideRecherche');
             aideRecherche.textContent = "Write the nickname in the research tool to find your picture";            
+        }
+		function credit()
+		{
+            var aide = document.getElementById('box');
+            aide.style.display = 'none';
+            
+            var credit = document.getElementById('creditBox');
+            credit.style.display = 'block';
+
+            var groupeMembresContenu = document.getElementById('groupeMembresContenu');
+            groupeMembresContenu.textContent = "Schneiter Raphael, Ristic Vojislav, Janssens Emmanuel, Bompard Corentin, Petit Maylis, Pittet Valentin, Houlmann Gildas, Herzig Melvyn, Gianinetti Lucas."
         }
 		function closeSideBarEsc(e)
 		{
@@ -410,6 +443,16 @@
 			}
 
 		}
+		function checkEnter(e)
+		{
+			if(SearchBox.style.display != "none")
+			{
+				if(e.keyCode == 13 )
+				{
+					showSearchResults();
+				}
+			}
+		}
 		function onWindowResize()
 		{
 			rendererW = window.innerWidth;
@@ -421,105 +464,7 @@
 			renderer.setSize(rendererW,rendererH );	
 		}
 
-		function OnWriting()
-		{
-			var objJSON,dbParam,xmlhttp,myObj;
-			//les paramètres a passer dans la requête SQL
-			//SearchTextBox => input de la barre de recherche
-			objJSON = {"Pseudo":SearchTextBox.value }
-			dbParam = JSON.stringify(objJSON);
-			
-			var div,img,pseudo,sep;
-			dynamicSearchResult.innerHTML = "";
 
-			
-			xmlSearch.abort();
-
-			xmlSearch.onreadystatechange = function()
-			{
-				if(this.readyState==4 && this.status == 0)
-				{
-					console.log("canceled "+SearchTextBox.value);
-				}
-				if(this.readyState ==4 && this.status==200)
-				{
-					dynamicSearchResult.style.display ='flex';
-
-					///Afficher un tableau avec tout les résultats
-					if(this.responseText != "")
-					{
-						myObj = JSON.parse(this.responseText);
-						//pour partir d'une div vide
-						//tableau de résultat de la recherche/requete SQL
-						//https://stackoverflow.com/questions/15860683/onclick-event-in-a-for-loop						
-						if(SearchTextBox.value != "")
-						{						
-							var total = myObj.length;
-
-							if(total > 0)
-							{
-								for(var i = 0; i < total; i++)
-								(function(i)
-								{
-									if(myObj[i].ImageOK != 0)
-									{		
-
-										div = document.createElement('div');
-										sep = document.createElement('span');
-										sep.id = "separator";
-										img = document.createElement('img');
-										img.src =  "images/64-64/"+myObj[i].IDImage+".png";
-										img.onclick = function()
-										{
-											var plane = scene.getObjectByName( myObj[i].IDPlace );
-
-
-											var target = new THREE.Vector3((plane.position.x) * (-1) * 1.1  ,(plane.position.y) * (-1) * 1.1 ,plane.position.z * 1.1); // create on init
-											
-											//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
-											animateVector3(camera.position, target, {
-												
-												duration: 2000, 
-												
-												easing : TWEEN.Easing.Cubic.InOut,
-											});
-											if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
-											{
-
-											}
-											else
-											{
-												onImageClick(myObj[i].IDPlace);
-											}
-											hideSearch();
-										}
-										pseudo = document.createElement('p');
-										pseudo.innerHTML =  myObj[i].Pseudo;
-
-										div.appendChild(img);
-										div.appendChild(pseudo);
-										dynamicSearchResult.appendChild(sep);
-										dynamicSearchResult.appendChild(div);
-
-									}
-								})(i);
-							}
-							else
-							{
-								dynamicSearchResult.style.display ='none';
-							}
-						}
-					}					
-				}
-  		 	 }
-				
-			if(	SearchTextBox.value != "")
-			{
-				xmlSearch.open("POST", "searchChild.php", true);
-				xmlSearch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xmlSearch.send("x=" + dbParam); 
-			}
-		}
 		function onMouseMove(event)
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;

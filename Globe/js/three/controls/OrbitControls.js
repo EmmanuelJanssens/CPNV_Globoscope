@@ -628,25 +628,6 @@ THREE.OrbitControls = function ( object, domElement ) {
 	function onKeyPress( event ) {
         //WASD AND +/- FOR ZOOMING
 		switch(event.charCode){
-			case scope.charcodes.A:{
-				rotateLeft(0.075);
-			break;
-			}
-
-			case scope.charcodes.W:{
-				rotateUp(0.075);
-			break;
-			}
-
-			case scope.charcodes.D:{
-				rotateLeft(-0.075);
-			break;
-			}
-
-			case scope.charcodes.S:{
-				rotateUp(-0.075);
-			break;
-			}
 
 			case scope.charcodes.MINUS:{
 				dollyIn( getZoomScale() );

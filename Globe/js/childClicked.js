@@ -25,6 +25,7 @@ function onImageClick(x)
                 //Si l'image existe
                 if(myObj[0].ImageOK != 0)
                 {
+                    console.log(myObj[0].IDImage);                    
                     var details =  document.getElementById("onClickDetails").childNodes;
                     childImage.src = "images/400-500/"+myObj[0].IDImage+".jpg";
                     childPseudo.textContent = myObj[0].Pseudo;
