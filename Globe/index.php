@@ -21,7 +21,7 @@
 		<div id="header">
 			<h3 class="aide" a href="">Help</h3>
 		</div>
-		<p id="closeHelp">X</p>
+		<p id="closeHelp" onclick="closeHelp()">X</p>
 		<div id="direction">
 			<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
 			<p id="aideDeplacementSouris"> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
@@ -42,7 +42,7 @@
 			<div id="header">
 				<h3 class="credit" a href="">Credit</h3>            
 			</div>
-			<p id="closeCredit">X</p>
+			<p id="closeCredit" onclick="closeHelp()">X</p>
 			<img id="imageGroupe" src="images/photoGroupe" alt="Development Group"> 
 			<div id="Groupe">
 				<p id="groupeMembresContenu"></p>
@@ -219,9 +219,6 @@
 		var helpButton = document.getElementById('helpButton');
 		helpButton.style.display = 'block';
 		helpButton.onclick = showHelp;
-
-		var closeHelpDiv = document.getElementById('closeHelp');
-		closeHelpDiv.onclick= closeHelp;
 
 		/*Loader*/
 
