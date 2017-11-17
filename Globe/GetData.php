@@ -1,15 +1,15 @@
 <?php
 
     //Variables d'authentifications
-    $servername = "localhost";
+    /*$servername = "localhost";
     $username = "globescope_img";
     $password = "aPH7p33G9t";
-    $dbname = "globescope_img";
+    $dbname = "globescope_img";*/
 
-    /*$servername = "localhost";
+    $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "globoscope";*/
+    $dbname = "globoscope"; 
 
     //Connection à la BD
     $bdd = new PDO('mysql:host='.$servername.';dbname='.$dbname.';charset=utf8', $username, $password);

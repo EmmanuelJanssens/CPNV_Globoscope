@@ -15,34 +15,33 @@
 	</head>
 
 	<body>
-	<span><img id="helpButton" src="images/questionMark.png"></span>
-	<div id="Help">
-	<div id="box">
-		<div id="header">
-			<h3 class="aide" a href="">Help</h3>
+	<span><img id="helpButton" class ="GUI" src="images/questionMark.png"></span>
+	<div id="Help" class = "GUI">
+		<div id="box">
+			<div id="header">
+				<h3 class="aide" a href="">Help</h3>
+			</div>
+			<p id="closeHelp" class = "closeButton" onclick="closeHelp()">X</p>
+			<div id="direction">
+				<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
+				<p id="aideDeplacementSouris"> déplacez vous en maintenant le clic gauche de la souris.</p>
+			</div>
+			<div id="Aidereste" class="Aide">
+				<p id="aideZoom">utilisez les touches +/- pour zoomer/dézoomer</p>
+				<hr></hr>
+				<p id="aideAgrandirImage">Double-cliquez sur l'image pour l'agrandir et afficher ses informations</p>
+				<hr></hr>
+				<p id="aideRecherche">Pour recherche un/votre pseudo cliquez sur la loupe et ecrivez ensuite un/votre pseudo.</p>
+			</div>
+			<div class="languageSelect">
+				<span id="FR" onclick="aideFr()">FR</span>/<span id="EN" onclick="aideAng()">EN</span>/<span id="creditSpan" onclick="credit()">Credits</span>
+			</div>
 		</div>
-		<p id="closeHelp" onclick="closeHelp()">X</p>
-		<div id="direction">
-			<img src="images/arrowKeys.png" height="50" width="80" alt="touches directions" />
-			<p id="aideDeplacementSouris"> pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez</p>
-		</div>
-		<div id="Aidereste" class="Aide">
-			<p id="aideZoom">+ et - : pour zoomer et dézoomer</p>
-			<hr></hr>
-			<p id="aideAgrandirImage">Cliquez sur l'image pour l'agrandir et afficher ses informations</p>
-			<hr></hr>
-			<p id="aideRecherche">Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image</p>
-		</div>
-		<div class="languageSelect">
-			<span id="FR" onclick="aideFr()">FR</span>/<span id="EN" onclick="aideAng()">EN</span>
-			<span id="creditSpan" onclick="credit()">Credits</span>
-		</div>
-   	</div>
-	<div id="creditBox">
+		<div id="creditBox">
 			<div id="header">
 				<h3 class="credit" a href="">Credit</h3>            
 			</div>
-			<p id="closeCredit" onclick="closeHelp()">X</p>
+			<p id="closeCredit" class="closeButton" onclick="closeHelp()">X</p>
 			<img id="imageGroupe" src="images/photoGroupe.png" alt="Development Group"> 
 			<div id="Groupe">
 				<p id="groupeMembresContenu"></p>
@@ -53,8 +52,8 @@
 		</div>
 	</div>
 	
-	<div id="sideBar">
-		<p id="closeSideBar">X</p>
+	<div id="sideBar" class ="GUI">
+		<p id="closeSideBar" class="closeButton">X</p>
 		<div class ="loader" id="imageLoader"></div>
 		<div id="onClickDetails" >
 				<img id="childImage">
@@ -71,9 +70,9 @@
 		</div>
 	</div>
 	
-	<span><img id="showSearch" src = "images/searchIcon.png"></span>
+	<span><img id="showSearch" class ="GUI" src = "images/searchIcon.png"></span>
 
-	<div id="searchBar">
+	<div id="searchBar" class="GUI">
 		<input type="text" id="searchText">                                        
 		<span id="searchButton">Recherche</span>
 		</input>
@@ -166,9 +165,9 @@
 		scene.add(skyBox);  
 		
 		/**Fin initialisation three JS */
-		var container = document.createElement('div');
+		var container = renderer.domElement;
 		container.id = "CanvContainer";
-
+		container.className = "canvas";
 		/**Tout les composant concernant la barre de recherche */
 		var showSearchButton = document.getElementById('showSearch');
 		showSearchButton.onclick =  showSearch;
@@ -225,17 +224,23 @@
 		window.addEventListener('resize',onWindowResize,false);
 		window.addEventListener("keydown", closeSideBarEsc);
 
-		document.onmousedown = onMouseClick;
-		document.onmousemove = onMouseMove;
-		document.onkeydown = checkEnter;
-		document.body.appendChild(container);
-		
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+		{
+			container.onmousedown = onMouseClick;
+		}
+		else
+		{
+			container.ondblclick = onMouseClick;
+		}
 
-		container.appendChild(renderer.domElement);
+		container.onmousemove = onMouseMove;
+		document.body.onkeydown = checkEnter;
+		document.body.appendChild(container);
+
 
 		loadData(scene,container);
 		animate();
-		
+
 		//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
 		function animateVector3(vectorToAnimate, target, options)
 		{
@@ -275,16 +280,16 @@
             var box = document.getElementById('box');
             box.style.display = 'flex';
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
-			deplacementSouris.textContent = "pour se déplacer verticalement et horizontalement ou maintenez la souris puis relâchez";
+			deplacementSouris.textContent = "déplacez vous en maintenant le clic gauche de la souris.";
 			
             var aideZoom = document.getElementById('aideZoom');
-			aideZoom.textContent = "+ et - : pour zoomer et dézoomer";
+			aideZoom.textContent = "utilisez les touches +/- ou la molette de souris pour zoomer/dézoomer";
 			
             var aideAgrandirImage = document.getElementById('aideAgrandirImage');
-			aideAgrandirImage.textContent = "Cliquez sur l'image pour l'agrandir et afficher ses informations";
+			aideAgrandirImage.textContent = "Double-cliquez sur l'image pour l'agrandir et afficher ses informations";
 			
             var aideRecherche = document.getElementById('aideRecherche');
-            aideRecherche.textContent = "Ecrivez le pseudo dans la barre de recherche afin d'afficher votre image";
+            aideRecherche.textContent = "Pour recherche un/votre pseudo cliquez sur la loupe et ecrivez ensuite un/votre pseudo.";
         }
 		function aideAng()
 		{
@@ -292,16 +297,16 @@
             credit.style.display = 'none';
 
             var deplacementSouris = document.getElementById('aideDeplacementSouris');
-			deplacementSouris.textContent = "Drag the mouse arround to explore the globe";
+			deplacementSouris.textContent = "Drag the mouse arround while maintaining the left button down to explore the globe";
 			
             var aideZoom = document.getElementById('aideZoom');
-			aideZoom.textContent = "+ and - : to zoom in and zoom out";
+			aideZoom.textContent = "use +/- or the mouse wheel  to zoom/out";
 			
             var aideAgrandirImage = document.getElementById('aideAgrandirImage');
 			aideAgrandirImage.textContent = "Click on the picture to enlarge and display the informations";
 			
             var aideRecherche = document.getElementById('aideRecherche');
-            aideRecherche.textContent = "Write the nickname in the research tool to find your picture";            
+            aideRecherche.textContent = "To find a/your pseudo, click on the magnifying glass and write a/your pseudo";            
         }
 		function credit()
 		{
@@ -342,7 +347,7 @@
 		{
 			SearchBox.style.display='flex';
 			showSearchButton.style.display ='none';
-			SearchBox.className = "w3-animate-top";
+			SearchBox.className = "GUI w3-animate-top";
 			SearchTextBox.focus();
 		}
 		function hideSearch()
@@ -353,11 +358,11 @@
 		function showHelp()
 		{
 			helpDiv.style.display = 'block';
-			helpDiv.className = "w3-animate-left";
+			helpDiv.className = "GUI w3-animate-left";
 
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 			{
-				document.onmousedown = null;
+				container.onmousedown= null;
 				helpButton.style.display = 'none';
 				SearchBox.style.display = 'none';
 				showSearchButton.style.display ='none';
@@ -368,7 +373,7 @@
 			helpDiv.style.display = 'none';
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				document.onmousedown = onMouseClick;
+				container.onmousedown = onMouseClick;
 				helpButton.style.display = 'block';
 				showSearchButton.style.display ='block';
 			}			
@@ -420,7 +425,7 @@
 			sideBar.className = "";
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				document.onmousedown = onMouseClick;
+				container.onmousedown = onMouseClick;
 				helpButton.style.display = 'block';
 				showSearchButton.style.display = 'block';
 			}
@@ -430,7 +435,7 @@
 			imageLoader.style.display = 'block';
 			
 
-			sideBar.className = "w3-animate-right";
+			sideBar.className = "GUI w3-animate-right";
 			sideBar.style.display='block';
 
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
@@ -439,7 +444,7 @@
 				{
 					helpDiv.style.display = "none";
 				}
-				document.onmousedown = null;
+				container.onmousedown  = null;
 				helpButton.style.display = 'none';
 				showSearchButton.style.display = 'none';
 
@@ -463,12 +468,8 @@
 			rendererH = window.innerHeight;
 			camera.aspect =  rendererW/rendererH;
 			camera.updateProjectionMatrix();
-
-
 			renderer.setSize(rendererW,rendererH );	
 		}
-
-
 		function onMouseMove(event)
 		{
 			mouse.x = (event.clientX /rendererW) * 2 -1;
@@ -477,6 +478,7 @@
 
 		function onMouseClick( event ) 
 		{
+			console.log(distanceVector(camera.position,new THREE.Vector3(0,0,0)) + " "+ controls.rotateSpeed);
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY /rendererH) * 2 + 1;
 			switch(event.button)
@@ -494,6 +496,10 @@
 						{
 							onImageClick(intersects[ 0 ].object.name);
 						}
+						else
+						{
+
+						}
 					}
 				break;
 				case 2:
@@ -502,16 +508,29 @@
 				break;
 			}
 		}
+		function distanceVector( v1, v2 )
+		{
+			var dx = v1.x - v2.x;
+			var dy = v1.y - v2.y;
+			var dz = v1.z - v2.z;
+
+			return Math.sqrt( dx * dx + dy * dy + dz * dz );
+		}
+
 		function animate() 
 		{
-			requestAnimationFrame( animate );
-			TWEEN.update();
-			controls.update();
+			setTimeout( function() 
+			{				
+				requestAnimationFrame( animate );
+				TWEEN.update();
+				controls.update();
+			}, 1000 / 30 );			
+
 			render();
 		}
 		function render() 
 		{
-			
+			controls.rotateSpeed = 1/(10000/distanceVector(camera.position,new THREE.Vector3(0,0,0)));
 			// update the picking ray with the camera and mouse position
 			raycaster.setFromCamera( mouse, camera );	
 			// calculate objects intersecting the picking ray

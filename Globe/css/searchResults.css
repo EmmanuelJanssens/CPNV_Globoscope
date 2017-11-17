@@ -10,6 +10,9 @@
 {
     border-radius: 10px;
     background-color: #bcdc53;
+    padding-left: 5px;
+    padding-right: 5px;
+
     margin: 5px;
     text-align: center;
 }
