@@ -18,7 +18,7 @@ function searchChild(camera,scene)
         {
 
             ///Afficher un tableau avec tout les résultats
-            if(this.responseText != "")
+            if(this.responseText != "" && SearchTextBox.value != "")
             {
                 myObj = JSON.parse(this.responseText);
 
@@ -81,7 +81,7 @@ function searchChild(camera,scene)
         }
     }
 
-    xmlhttp.open("POST", "searchChild.php", true);
+    xmlhttp.open("POST", "GetData.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("x=" + dbParam);   	
+    xmlhttp.send("x=" + dbParam+"&Mode=search");   	
 }

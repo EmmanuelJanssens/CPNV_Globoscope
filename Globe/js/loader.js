@@ -59,7 +59,6 @@ function loadData(scene,canvContainer)
                 mesh.rotateZ(Math.PI);
                 mesh.rotateY(-Math.PI/1.7);
                 scene.add( mesh );
-                console.log(rayon);
                 for(x = 0; x < data.length;x++)
                 {      
                     //charger une image 
@@ -104,10 +103,10 @@ function loadData(scene,canvContainer)
         }
     };
 
-    xmlhttp.open("POST", "loader.php", true);
+    xmlhttp.open("POST", "GetData.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
-    xmlhttp.send("x=" + dbParam);    
+    xmlhttp.send("x=" + dbParam + "&Mode=load");    
 
 }
 

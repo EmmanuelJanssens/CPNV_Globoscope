@@ -5,7 +5,6 @@ function onImageClick(x)
 {
     var obj, dbParam, xmlhttp, myObj;
     obj = { "ID":x};
-    var ID = x;
     dbParam = JSON.stringify(obj);
 
 
@@ -19,7 +18,6 @@ function onImageClick(x)
     {
         if (this.readyState == 4 && this.status == 200) 
         {
-            console.log(x+ " "+this.responseText );
             if(this.responseText != "")
             {
                 //convertit les données reçues depuis le fichier PHP correspondent (JsonEncode)
@@ -38,8 +36,8 @@ function onImageClick(x)
     }
 
     //exécuter la requete en mode POST avec les paramètres voulus (x) => ID
-    xmlhttp.open("POST", "selectImage.php", true);
+    xmlhttp.open("POST", "GetData.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("x=" + ID );   
+    xmlhttp.send("x=" + dbParam +"&Mode=click");   
 
 }

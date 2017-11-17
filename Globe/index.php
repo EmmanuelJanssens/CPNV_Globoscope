@@ -43,7 +43,7 @@
 				<h3 class="credit" a href="">Credit</h3>            
 			</div>
 			<p id="closeCredit" onclick="closeHelp()">X</p>
-			<img id="imageGroupe" src="images/photoGroupe" alt="Development Group"> 
+			<img id="imageGroupe" src="images/photoGroupe.png" alt="Development Group"> 
 			<div id="Groupe">
 				<p id="groupeMembresContenu"></p>
 			</div>
@@ -357,6 +357,7 @@
 
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 			{
+				document.onmousedown = null;
 				helpButton.style.display = 'none';
 				SearchBox.style.display = 'none';
 				showSearchButton.style.display ='none';
@@ -367,6 +368,7 @@
 			helpDiv.style.display = 'none';
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
+				document.onmousedown = onMouseClick;
 				helpButton.style.display = 'block';
 				showSearchButton.style.display ='block';
 			}			
@@ -400,7 +402,6 @@
 		}
 		function showOnClickDetails()
 		{
-
 			onSearchDetails.style.display = 'none';
 			onClickDetails.style.display = 'flex';
 
@@ -434,10 +435,16 @@
 
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
+				if(helpDiv.style.display != "none")
+				{
+					helpDiv.style.display = "none";
+				}
 				document.onmousedown = null;
 				helpButton.style.display = 'none';
 				showSearchButton.style.display = 'none';
+
 			}
+			
 
 		}
 		function checkEnter(e)

@@ -115,3 +115,15 @@
     }
 
 }
+@media screen and (max-height: 800px)
+{
+    #sideBar
+    {
+        height: 80%;
+    }
+    #onClickDetails img
+    {
+        padding:10px;
+        width: 80%;
+    }
+}
