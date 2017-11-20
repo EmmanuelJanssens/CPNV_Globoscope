@@ -283,24 +283,14 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function rotateLeft( angle ) {
-
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && spherical.radius < 3500 ) {
-         sphericalDelta.theta -= angle/25;
-        }else{
-            sphericalDelta.theta -= angle;
-        }
-        
-
+	function rotateLeft( angle ) 
+	{
+    	sphericalDelta.theta -= angle;       
 	}
 
-	function rotateUp( angle ) {
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && spherical.radius < 3500 ) {
-		  sphericalDelta.phi -= angle/25;
-        }else{
-            sphericalDelta.phi -= angle;
-        }
-
+	function rotateUp( angle ) 
+	{
+        sphericalDelta.phi -= angle;     
 	}
 
 	function dollyIn( dollyScale ) {

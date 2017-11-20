@@ -40,7 +40,8 @@ body
 
 .canvas
 {
-    z-index : -9999;}
+    z-index : -9999;
+}
 .GUI
 {
     text-align: center;
@@ -57,4 +58,18 @@ body
     
     position: absolute;
     top: -15px;
-    right: 20px;}
+    right: 20px;
+}
+#loading
+{
+    position: absolute;
+    z-index: 1;
+    color:white;
+    
+    left:50%;
+    top :2%;
+    
+    margin : -0px 0 0 -100px;
+    
+    font-size: 1.7em;
+}

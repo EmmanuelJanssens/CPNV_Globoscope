@@ -1,4 +1,4 @@
-function loadData(scene,canvContainer)
+function loadData(scene,canvContainer,controls)
 {
     var searchObj, dbParam, xmlhttp, data, x = "";
     textureLoader = new THREE.TextureLoader();
@@ -15,6 +15,8 @@ function loadData(scene,canvContainer)
     canvContainer.style.display = "block";
 
     var index = 0;
+
+
     xmlhttp.onreadystatechange = function() 
     {
         if(this.readyState == 4 && this.status == 200) 
@@ -50,15 +52,26 @@ function loadData(scene,canvContainer)
 
             var TextureLoader = new THREE.TextureLoader();
 
-            var angles = new Array();
+
+
+            var totalImages = 0;
+            var imageLoaded = 0;
+            var i;
+            for(i in data)
+            {
+                if(data[i].ImageOK == "VRAI")
+                    totalImages++;
+            }
             TextureLoader.load( 'images/earth.jpg', function ( texture )
             {
                 var geometry = new THREE.SphereGeometry( rayon - 15, 30, 30 );
                 var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
-                var mesh = new THREE.Mesh( geometry, material );
-                mesh.rotateZ(Math.PI);
-                mesh.rotateY(-Math.PI/1.7);
-                scene.add( mesh );
+                var sphere = new THREE.Mesh( geometry, material );
+                var mesh;
+                sphere.rotateZ(Math.PI);
+                sphere.rotateY(-Math.PI/1.7);
+                scene.add(sphere);
+                
                 for(x = 0; x < data.length;x++)
                 {      
                     //charger une image 
@@ -68,7 +81,15 @@ function loadData(scene,canvContainer)
                         //afficher le canvas lorsque la dernière image est chargée
                         
                         file ="images/64-64/"+data[x].IDImage+".png";                   
-                        texture =  textureLoader.load( file);
+                        texture =  textureLoader.load( file, function()
+                        {
+                            imageLoaded++;
+                            if(imageLoaded == totalImages)
+                            {
+                                document.getElementById("loading").style.display = "none";
+                                controls.autoRotate = false;                                
+                            }
+                        });
                         //Inversion des textures --
                         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                         texture.repeat.x = -1;
@@ -92,10 +113,8 @@ function loadData(scene,canvContainer)
                         mesh.name = data[x].IDPlace;
                         mesh.type = data[x].ImageOK;
                         mesh.id = index;
-                        angles.push([lat,long]);
-                        mesh.userData = angles;
 
-                        scene.add( mesh );                      
+                        scene.add(mesh);
                     }          
                 }
                 scene.rotation.z = Math.PI;

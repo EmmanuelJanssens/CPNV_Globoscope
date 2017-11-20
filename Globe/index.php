@@ -82,6 +82,9 @@
 	</div>
 
 
+	<div id="loading">
+		<p>Chargement...</p>
+	</div>
 
 	<script src= "js/three.min.js"></script>
 	<script src= "js/three/controls/OrbitControls.js"></script>
@@ -131,7 +134,7 @@
 		controls.enableDamping = true;
         controls.minDistance = 2850;
         controls.maxDistance = 5000;
-					
+		controls.autoRotate = true;
 		/*Conteneur des détails de l'image recherchée //Onclick */
 		camera.position.z = 7000;
 		
@@ -226,11 +229,12 @@
 
 		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 		{
-			container.onmousedown = onMouseClick;
+			container.onmousedown = onMouseDBClick;
 		}
 		else
 		{
-			container.ondblclick = onMouseClick;
+			container.onmousedown = onMouseClick;
+			container.ondblclick = onMouseDBClick;
 		}
 
 		container.onmousemove = onMouseMove;
@@ -238,7 +242,7 @@
 		document.body.appendChild(container);
 
 
-		loadData(scene,container);
+		loadData(scene,container,controls);
 		animate();
 
 		//https://medium.com/@lachlantweedie/animation-in-three-js-using-tween-js-with-examples-c598a19b1263
@@ -303,7 +307,7 @@
 			aideZoom.textContent = "use +/- or the mouse wheel  to zoom/out";
 			
             var aideAgrandirImage = document.getElementById('aideAgrandirImage');
-			aideAgrandirImage.textContent = "Click on the picture to enlarge and display the informations";
+			aideAgrandirImage.textContent = "Doubleclick on the picture to enlarge and display the informations";
 			
             var aideRecherche = document.getElementById('aideRecherche');
             aideRecherche.textContent = "To find a/your pseudo, click on the magnifying glass and write a/your pseudo";            
@@ -373,7 +377,7 @@
 			helpDiv.style.display = 'none';
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				container.onmousedown = onMouseClick;
+				container.onmousedown = onMouseDBClick;
 				helpButton.style.display = 'block';
 				showSearchButton.style.display ='block';
 			}			
@@ -425,7 +429,7 @@
 			sideBar.className = "";
 			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
 			{
-				container.onmousedown = onMouseClick;
+				container.onmousedown = onMouseDBClick;
 				helpButton.style.display = 'block';
 				showSearchButton.style.display = 'block';
 			}
@@ -472,13 +476,27 @@
 		}
 		function onMouseMove(event)
 		{
+
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY / rendererH) * 2 + 1;		
 		}
 
-		function onMouseClick( event ) 
+		function onMouseClick(event)
 		{
-			console.log(distanceVector(camera.position,new THREE.Vector3(0,0,0)) + " "+ controls.rotateSpeed);
+			if(controls.autoRotate)
+			{
+				controls.autoRotate = false;
+			}
+		}
+		function onMouseDBClick( event ) 
+		{
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+			{
+				if(controls.autoRotate)
+				{
+					controls.autoRotate = false;
+				}				
+			}
 			mouse.x = (event.clientX /rendererW) * 2 -1;
 			mouse.y = -(event.clientY /rendererH) * 2 + 1;
 			switch(event.button)
@@ -492,13 +510,11 @@
 				
 					if(intersects.length > 0)
 					{
+						console.log("OK");
+
 						if(intersects[0].object.type =="VRAI")
 						{
 							onImageClick(intersects[ 0 ].object.name);
-						}
-						else
-						{
-
 						}
 					}
 				break;
@@ -530,7 +546,7 @@
 		}
 		function render() 
 		{
-			controls.rotateSpeed = 1/(10000/distanceVector(camera.position,new THREE.Vector3(0,0,0)));
+			controls.rotateSpeed = 0.1/(10000/distanceVector(camera.position,new THREE.Vector3(0,0,0)));
 			// update the picking ray with the camera and mouse position
 			raycaster.setFromCamera( mouse, camera );	
 			// calculate objects intersecting the picking ray
